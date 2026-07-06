@@ -1,12 +1,11 @@
 package com.example.moviereservation.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -28,10 +27,14 @@ public class Movie {
 
     private Float duration;
 
+    @OneToMany(mappedBy = "movie")
+    @JsonIgnore
+    private List<Schedule> schedules;
+
     public Movie() {
     }
 
-    public Movie(String id, String title, String description, float rating, String category, float duration) {
+    public Movie(String id, String title, String description, Float rating, String category, Float duration) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -95,5 +98,13 @@ public class Movie {
 
     public void setDuration(Float duration) {
         this.duration = duration;
+    }
+
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
     }
 }
