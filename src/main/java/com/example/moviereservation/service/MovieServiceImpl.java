@@ -1,6 +1,8 @@
 package com.example.moviereservation.service;
 
+import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.entity.Movie;
+import com.example.moviereservation.mapper.MovieMapper;
 import com.example.moviereservation.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,35 +12,43 @@ import java.util.List;
 @Service
 public class MovieServiceImpl implements MovieService {
 
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
+    private final MovieMapper mapper;
 
     @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, MovieMapper mapper) {
         this.movieRepository = movieRepository;
+        this.mapper = mapper;
     }
 
     @Override
-    public List<Movie> getAll(){
-        return movieRepository.findAll();
+    public List<MovieDto> getAll(){
+        return movieRepository.findAll()
+                .stream()
+                .map(mapper::entityToDto).toList();
     }
 
     @Override
-    public Movie getMovieById(String id){
+    public MovieDto getMovieById(String id){
         Movie theMovie = movieRepository.findById(id).orElse(null);
-        if(theMovie != null)
-            return theMovie;
+        if(theMovie != null) {
+            return mapper.entityToDto(theMovie);
+        }
         else throw new RuntimeException("Can't Find Movie with Id: " + id);
     }
 
     @Override
-    public Movie getMovieByTitle(String title){
-        return movieRepository.findByTitle(title);
+    public MovieDto getMovieByTitle(String title){
+
+        Movie theMovie =  movieRepository.findByTitle(title);
+        return mapper.entityToDto(theMovie);
     }
 
     @Override
-    public Movie addMovie(Movie movie){
+    public MovieDto addMovie(MovieDto movie){
         try {
-            return movieRepository.save(movie);
+            Movie theMovie =  movieRepository.save(mapper.dtoToEntity(movie));
+            return mapper.entityToDto(theMovie);
         }catch (IllegalArgumentException exp){
             System.out.println(exp.getMessage());
         }catch (Exception e){

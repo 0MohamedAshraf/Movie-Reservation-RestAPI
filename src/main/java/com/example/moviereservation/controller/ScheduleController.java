@@ -1,5 +1,6 @@
 package com.example.moviereservation.controller;
 
+import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.dto.ScheduleDto;
 import com.example.moviereservation.entity.Movie;
 import com.example.moviereservation.entity.Schedule;
@@ -29,7 +30,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/{scheduleId}/movie")
-    public Movie getMovie(@PathVariable String scheduleId){
+    public MovieDto getMovie(@PathVariable String scheduleId){
         return scheduleService.showMovie(scheduleId);
     }
 

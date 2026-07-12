@@ -1,9 +1,12 @@
 package com.example.moviereservation.service;
 
+import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.dto.ScheduleDto;
 import com.example.moviereservation.entity.Movie;
 import com.example.moviereservation.entity.Schedule;
 import com.example.moviereservation.entity.Theater;
+import com.example.moviereservation.mapper.MovieMapper;
+import com.example.moviereservation.mapper.ScheduleMapper;
 import com.example.moviereservation.repository.MovieRepository;
 import com.example.moviereservation.repository.ScheduleRepository;
 import com.example.moviereservation.repository.TheaterRepository;
@@ -19,41 +22,20 @@ public class ScheduleServiceImpl implements ScheduleService{
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final TheaterRepository theaterRepository;
+    private final ScheduleMapper mapper;
+    private final MovieMapper movieMapper;
     public ScheduleServiceImpl(
             ScheduleRepository scheduleRepository,
             TheaterRepository theaterRepository,
-            MovieRepository movieRepository) {
+            MovieRepository movieRepository,
+            ScheduleMapper mapper, MovieMapper movieMapper) {
         this.scheduleRepository = scheduleRepository;
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
+        this.mapper = mapper;
+        this.movieMapper = movieMapper;
     }
 
-    private ScheduleDto entityToDto(Schedule schedule){
-        return new ScheduleDto(
-                schedule.getId(),
-                schedule.getStartTime(),
-                schedule.getEndTime(),
-                schedule.getDate(),
-                schedule.getPrice(),
-                schedule.getMovie().getId(),
-                schedule.getTheater().getId()
-        );
-    }
-
-    private Schedule dtoToEntity(ScheduleDto scheduleDto){
-        Movie movie = movieRepository.findById(scheduleDto.getMovieId()).orElseThrow();
-        Theater theater = theaterRepository.findById(scheduleDto.getTheaterId()).orElseThrow();
-
-        return new Schedule(
-                scheduleDto.getId(),
-                scheduleDto.getStartTime(),
-                scheduleDto.getEndTime(),
-                scheduleDto.getDate(),
-                scheduleDto.getPrice(),
-                movie,theater
-
-        );
-    }
     public void validateSchedule(ScheduleDto schedule){
         if(schedule.getEndTime().isBefore(schedule.getStartTime())){
             throw new RuntimeException("End Time Must be After start time");
@@ -73,13 +55,13 @@ public class ScheduleServiceImpl implements ScheduleService{
     public List<ScheduleDto> getAll() {
         return scheduleRepository.findAll()
                 .stream()
-                .map(this::entityToDto).toList();
+                .map(mapper::entityToDto).toList();
     }
 
     @Override
     public ScheduleDto getScheduleById(String id) {
 
-        return scheduleRepository.findById(id).map(this::entityToDto).orElseThrow();
+        return scheduleRepository.findById(id).map(mapper::entityToDto).orElseThrow();
     }
 
     @Override
@@ -88,8 +70,11 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         validateSchedule(schedule);
 
-        Schedule theSchedule = scheduleRepository.save(dtoToEntity(schedule));
-        return entityToDto(theSchedule);
+        Movie movie = movieRepository.findById(schedule.getMovieId()).orElseThrow();
+        Theater theater = theaterRepository.findById(schedule.getTheaterId()).orElseThrow();
+
+        Schedule theSchedule = scheduleRepository.save(mapper.dtoToEntity(schedule,movie,theater));
+        return mapper.entityToDto(theSchedule);
     }
 
     @Override
@@ -98,7 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         schedule.setMovie(newMovie);
         scheduleRepository.save(schedule);
 
-        return entityToDto(schedule);
+        return mapper.entityToDto(schedule);
     }
 
     @Override
@@ -107,7 +92,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         schedule.setPrice(newPrice);
         scheduleRepository.save(schedule);
 
-        return entityToDto(schedule);
+        return mapper.entityToDto(schedule);
     }
 
     @Override
@@ -116,7 +101,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         schedule.setTheater(newTheater);
         scheduleRepository.save(schedule);
 
-        return entityToDto(schedule);
+        return mapper.entityToDto(schedule);
     }
 
     @Override
@@ -126,12 +111,12 @@ public class ScheduleServiceImpl implements ScheduleService{
         schedule.setEndTime(endTime);
         scheduleRepository.save(schedule);
 
-        return entityToDto(schedule);
+        return mapper.entityToDto(schedule);
     }
 
     @Override
-    public Movie showMovie(String scheduleId) {
+    public MovieDto showMovie(String scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
-        return schedule.getMovie();
+        return movieMapper.entityToDto(schedule.getMovie());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.moviereservation.controller;
 
 
+import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.entity.Movie;
 import com.example.moviereservation.service.MovieService;
 import com.example.moviereservation.service.MovieServiceImpl;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/movie")
 public class MovieController {
 
-    private MovieService movieService;
+    private final MovieService movieService;
 
     @Autowired
     public MovieController(MovieService movieService) {
@@ -21,26 +22,23 @@ public class MovieController {
     }
 
     @GetMapping
-    public List<Movie> getAllMovies(){
+    public List<MovieDto> getAllMovies(){
         return movieService.getAll();
     }
 
     @GetMapping("/id/{id}")
-    public Movie getMovieById(@PathVariable String id){
+    public MovieDto getMovieById(@PathVariable String id){
         return movieService.getMovieById(id);
     }
 
     @GetMapping("/title/{title}")
-    public Movie getMovieByTitle(@PathVariable String title){
+    public MovieDto getMovieByTitle(@PathVariable String title){
         return movieService.getMovieByTitle(title);
     }
 
     @PostMapping
-    public Movie addMovie(@RequestBody Movie movie){
+    public MovieDto addMovie(@RequestBody MovieDto movie){
 
-        Movie theMovie = movieService.addMovie(movie);
-        if(theMovie != null){
-            return theMovie;
-        }else throw new RuntimeException("Can't add Movie");
+        return movieService.addMovie(movie);
     }
 }

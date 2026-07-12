@@ -1,17 +1,9 @@
-package com.example.moviereservation.entity;
-
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+package com.example.moviereservation.dto;
 
 import java.time.LocalDate;
 import java.util.List;
 
-
-@Entity
-@Table(name = "movie")
-public class Movie {
-    @Id
+public class MovieDto {
     private String id;
 
     private String title;
@@ -20,27 +12,26 @@ public class Movie {
 
     private Float rating;
 
-    @Column(name = "release_date")
     private LocalDate releaseDate;
 
     private String category;
 
     private Float duration;
 
-    @OneToMany(mappedBy = "movie")
-    private List<Schedule> schedules;
+    private List<ScheduleDto> schedules;
 
-    public Movie() {
+    public MovieDto() {
     }
 
-    public Movie(String id, String title, String description, Float rating, String category, Float duration) {
+    public MovieDto(String id, String title, String description, Float rating, LocalDate releaseDate, String category, Float duration, List<ScheduleDto> schedules) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.rating = rating;
-        this.releaseDate = LocalDate.now();
+        this.releaseDate = releaseDate;
         this.category = category;
         this.duration = duration;
+        this.schedules = schedules;
     }
 
     public String getId() {
@@ -79,8 +70,8 @@ public class Movie {
         return releaseDate;
     }
 
-    public void setReleaseDate(LocalDate release_date) {
-        this.releaseDate = release_date;
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getCategory() {
@@ -99,11 +90,11 @@ public class Movie {
         this.duration = duration;
     }
 
-    public List<Schedule> getSchedules() {
+    public List<ScheduleDto> getSchedules() {
         return schedules;
     }
 
-    public void setSchedules(List<Schedule> schedules) {
+    public void setSchedules(List<ScheduleDto> schedules) {
         this.schedules = schedules;
     }
 }

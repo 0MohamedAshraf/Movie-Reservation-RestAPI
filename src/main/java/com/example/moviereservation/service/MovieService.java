@@ -1,17 +1,18 @@
 package com.example.moviereservation.service;
 
+import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.entity.Movie;
 
 import java.util.List;
 
 public interface MovieService {
-    List<Movie> getAll();
+    List<MovieDto> getAll();
 
-    Movie getMovieById(String id);
+    MovieDto getMovieById(String id);
 
-    Movie getMovieByTitle(String title);
+    MovieDto getMovieByTitle(String title);
 
-    Movie addMovie(Movie movie);
+    MovieDto addMovie(MovieDto movie);
 
     void deleteMovie(String id);
 }

@@ -1,5 +1,6 @@
 package com.example.moviereservation.service;
 
+import com.example.moviereservation.dto.TheaterDto;
 import com.example.moviereservation.entity.Theater;
 
 import java.util.List;
@@ -7,15 +8,15 @@ import java.util.List;
 
 public interface TheaterService {
 
-    List<Theater> getAll();
+    List<TheaterDto> getAll();
 
-    Theater getTheaterById(String id);
+    TheaterDto getTheaterById(String id);
 
-    Theater getTheaterByName(String name);
+    TheaterDto getTheaterByName(String name);
 
-    Theater addTheater(Theater theater);
+    TheaterDto addTheater(TheaterDto theater);
 
-    List<Theater> filterTheatersByCity(String city);
+    List<TheaterDto> filterTheatersByCity(String city);
 
 
 

@@ -1,6 +1,7 @@
 package com.example.moviereservation.service;
 
 
+import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.dto.ScheduleDto;
 import com.example.moviereservation.entity.Movie;
 import com.example.moviereservation.entity.Schedule;
@@ -24,5 +25,5 @@ public interface ScheduleService {
 
     ScheduleDto changeTime(String scheduleId, LocalDateTime startTime, LocalDateTime endTime);
 
-    Movie showMovie(String scheduleId);
+    MovieDto showMovie(String scheduleId);
 }

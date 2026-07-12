@@ -1,5 +1,6 @@
 package com.example.moviereservation.controller;
 
+import com.example.moviereservation.dto.TheaterDto;
 import com.example.moviereservation.entity.Theater;
 import com.example.moviereservation.service.TheaterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("/theater")
 public class TheaterController {
 
-    private TheaterServiceImpl theaterService;
+    private final TheaterServiceImpl theaterService;
 
     @Autowired
     public TheaterController(TheaterServiceImpl theaterService) {
@@ -19,22 +20,22 @@ public class TheaterController {
     }
 
     @GetMapping
-    public List<Theater> getAll(){
+    public List<TheaterDto> getAll(){
         return theaterService.getAll();
     }
 
     @GetMapping("/id/{id}")
-    public Theater getTheaterById(@PathVariable String id){
+    public TheaterDto getTheaterById(@PathVariable String id){
         return theaterService.getTheaterById(id);
     }
 
     @GetMapping("/name/{name}")
-    public Theater getTheaterByName(@PathVariable String name){
+    public TheaterDto getTheaterByName(@PathVariable String name){
         return theaterService.getTheaterByName(name);
     }
 
     @PostMapping
-    public Theater addTheater(@RequestBody Theater theater){
+    public TheaterDto addTheater(@RequestBody TheaterDto theater){
         return theaterService.addTheater(theater);
     }
 }
