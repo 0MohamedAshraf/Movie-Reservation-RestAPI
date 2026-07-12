@@ -2,7 +2,10 @@ package com.example.moviereservation.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "actor")
@@ -15,6 +18,9 @@ public class Actor {
 
     private String bio;
 
+    @ManyToMany(mappedBy = "actors")
+    private List<Movie> movies;
+
     public Actor() {
     }
 
@@ -24,6 +30,13 @@ public class Actor {
         this.bio = bio;
     }
 
+    public List<Movie> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+    }
 
     public String getId() {
         return id;

@@ -1,7 +1,6 @@
 package com.example.moviereservation.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -30,6 +29,15 @@ public class Movie {
     @OneToMany(mappedBy = "movie")
     private List<Schedule> schedules;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "acts",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id")
+    )
+    private List<Actor> actors;
+
     public Movie() {
     }
 
@@ -41,6 +49,14 @@ public class Movie {
         this.releaseDate = LocalDate.now();
         this.category = category;
         this.duration = duration;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 
     public String getId() {
