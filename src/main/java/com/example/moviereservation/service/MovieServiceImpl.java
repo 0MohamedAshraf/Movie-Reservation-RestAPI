@@ -2,6 +2,7 @@ package com.example.moviereservation.service;
 
 import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.entity.Movie;
+import com.example.moviereservation.exceptions.MovieNotFoundException;
 import com.example.moviereservation.mapper.MovieMapper;
 import com.example.moviereservation.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +32,22 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto getMovieById(String id){
-        Movie theMovie = movieRepository.findById(id).orElse(null);
-        if(theMovie != null) {
-            return mapper.entityToDto(theMovie);
-        }
-        else throw new RuntimeException("Can't Find Movie with Id: " + id);
+        Movie theMovie = movieRepository.findById(id)
+                .orElseThrow(
+                        () -> new MovieNotFoundException("Movie With ID: " + id + " Not Found")
+                );
+
+        return mapper.entityToDto(theMovie);
+
+
     }
 
     @Override
     public MovieDto getMovieByTitle(String title){
 
         Movie theMovie =  movieRepository.findByTitle(title);
+        if(theMovie == null)
+            throw new MovieNotFoundException("Movie With title \"" + title + "\" Not Found");
         return mapper.entityToDto(theMovie);
     }
 
