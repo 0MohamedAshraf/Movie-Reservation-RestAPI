@@ -15,4 +15,11 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(MovieAlreadyExistsException.class)
+    public ResponseEntity<String> movieAlreadyExists(MovieAlreadyExistsException exception){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+
 }

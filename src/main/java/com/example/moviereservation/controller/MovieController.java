@@ -67,7 +67,7 @@ public class MovieController {
 
         if(theMovie != null){
             newMovie.setId(theMovie.getId());
-            MovieDto movie = movieService.addMovie(newMovie);
+            MovieDto movie = movieService.updateMovie(newMovie);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(movie);

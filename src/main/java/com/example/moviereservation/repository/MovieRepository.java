@@ -16,4 +16,6 @@ public interface MovieRepository extends JpaRepository<Movie,String> {
 
     @Query("SELECT m from Movie m order By m.rating DESC")
     List<Movie> findTopRated();
+
+    boolean existsByTitle(String title);
 }

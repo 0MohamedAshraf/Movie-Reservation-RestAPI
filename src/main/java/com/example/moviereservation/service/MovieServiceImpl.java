@@ -2,6 +2,7 @@ package com.example.moviereservation.service;
 
 import com.example.moviereservation.dto.MovieDto;
 import com.example.moviereservation.entity.Movie;
+import com.example.moviereservation.exceptions.MovieAlreadyExistsException;
 import com.example.moviereservation.exceptions.MovieNotFoundException;
 import com.example.moviereservation.mapper.MovieMapper;
 import com.example.moviereservation.repository.MovieRepository;
@@ -53,15 +54,17 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto addMovie(MovieDto movie){
-        try {
-            Movie theMovie =  movieRepository.save(mapper.dtoToEntity(movie));
-            return mapper.entityToDto(theMovie);
-        }catch (IllegalArgumentException exp){
-            System.out.println(exp.getMessage());
-        }catch (Exception e){
-            System.out.println("Unknown Exception: " + e.getMessage());
-        }
-        return null;
+        if(movieRepository.existsByTitle(movie.getTitle()))
+            throw new MovieAlreadyExistsException("Movie \"" + movie.getTitle() + "\" Already Exists");
+        Movie theMovie =  movieRepository.save(mapper.dtoToEntity(movie));
+        return mapper.entityToDto(theMovie);
+
+    }
+
+    @Override
+    public MovieDto updateMovie(MovieDto movie) {
+        Movie newMovie = movieRepository.save(mapper.dtoToEntity(movie));
+        return mapper.entityToDto(newMovie);
     }
 
     @Override

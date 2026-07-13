@@ -14,6 +14,7 @@ public interface MovieService {
 
     MovieDto addMovie(MovieDto movie);
 
+    MovieDto updateMovie(MovieDto movie);
     void deleteMovie(String id);
 
     List<MovieDto> filterByCategory(String category);
