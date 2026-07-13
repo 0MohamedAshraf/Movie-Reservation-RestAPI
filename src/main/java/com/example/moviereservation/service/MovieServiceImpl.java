@@ -7,6 +7,7 @@ import com.example.moviereservation.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -57,9 +58,33 @@ public class MovieServiceImpl implements MovieService {
         return null;
     }
 
+    @Override
     public void deleteMovie(String id){
         if(getMovieById(id) != null)
             movieRepository.deleteById(id);
         else throw new RuntimeException("Entity with id: " + id + " Not found");
+    }
+
+    @Override
+    public List<MovieDto> filterByCategory(String category) {
+        List<Movie> movies = movieRepository.findByCategory(category);
+        if(movies == null)
+            return Collections.emptyList();
+        return movies
+                .stream()
+                .map(mapper::entityToDto)
+                .toList();
+    }
+
+    @Override
+    public List<MovieDto> topRatedMovies() {
+        List<Movie> movies = movieRepository.findTopRated();
+        if (movies == null)
+            return Collections.emptyList();
+
+        return movies
+                .stream()
+                .map(mapper::entityToDto)
+                .toList();
     }
 }

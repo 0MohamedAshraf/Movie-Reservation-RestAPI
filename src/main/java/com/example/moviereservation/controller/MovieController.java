@@ -36,9 +36,36 @@ public class MovieController {
         return movieService.getMovieByTitle(title);
     }
 
+    @GetMapping("/category/{category}")
+    public List<MovieDto> filterByCategory(@PathVariable String category){
+        return movieService.filterByCategory(category);
+    }
+
+    @GetMapping("/top")
+    public List<MovieDto> topRatedMovies(){
+        return movieService.topRatedMovies();
+    }
+
     @PostMapping
     public MovieDto addMovie(@RequestBody MovieDto movie){
 
         return movieService.addMovie(movie);
     }
+
+    @PutMapping("/{id}")
+    public MovieDto updateMovie(@PathVariable String id,@RequestBody MovieDto newMovie){
+        MovieDto theMovie = movieService.getMovieById(id);
+
+        if(theMovie != null){
+            newMovie.setId(theMovie.getId());
+            return movieService.addMovie(newMovie);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteMovie(@PathVariable String id){
+        movieService.deleteMovie(id);
+    }
+
 }

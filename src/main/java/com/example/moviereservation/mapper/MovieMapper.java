@@ -1,8 +1,12 @@
 package com.example.moviereservation.mapper;
 
 import com.example.moviereservation.dto.MovieDto;
+import com.example.moviereservation.dto.ScheduleDto;
 import com.example.moviereservation.entity.Movie;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class MovieMapper {
@@ -14,6 +18,10 @@ public class MovieMapper {
 
 
     public MovieDto entityToDto(Movie movie){
+        List<ScheduleDto> movieSchedules;
+        if(movie.getSchedules() != null)
+            movieSchedules = movie.getSchedules().stream().map(scheduleMapper::entityToDto).toList();
+        else movieSchedules = Collections.emptyList();
         return new MovieDto(
                 movie.getId(),
                 movie.getTitle(),
@@ -22,7 +30,7 @@ public class MovieMapper {
                 movie.getReleaseDate(),
                 movie.getCategory(),
                 movie.getDuration(),
-                movie.getSchedules().stream().map(scheduleMapper::entityToDto).toList()
+                movieSchedules
         );
     }
 

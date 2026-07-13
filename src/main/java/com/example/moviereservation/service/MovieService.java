@@ -15,4 +15,8 @@ public interface MovieService {
     MovieDto addMovie(MovieDto movie);
 
     void deleteMovie(String id);
+
+    List<MovieDto> filterByCategory(String category);
+
+    List<MovieDto> topRatedMovies();
 }
