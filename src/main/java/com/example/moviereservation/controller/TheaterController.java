@@ -1,7 +1,6 @@
 package com.example.moviereservation.controller;
 
-import com.example.moviereservation.dto.TheaterDto;
-import com.example.moviereservation.entity.Theater;
+import com.example.moviereservation.dto.response.TheaterResponseDto;
 import com.example.moviereservation.service.TheaterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/theater")
+@RequestMapping("/api/v1/theater")
 public class TheaterController {
 
     private final TheaterServiceImpl theaterService;
@@ -20,22 +19,22 @@ public class TheaterController {
     }
 
     @GetMapping
-    public List<TheaterDto> getAll(){
+    public List<TheaterResponseDto> getAll(){
         return theaterService.getAll();
     }
 
     @GetMapping("/id/{id}")
-    public TheaterDto getTheaterById(@PathVariable String id){
+    public TheaterResponseDto getTheaterById(@PathVariable Integer id){
         return theaterService.getTheaterById(id);
     }
 
     @GetMapping("/name/{name}")
-    public TheaterDto getTheaterByName(@PathVariable String name){
+    public TheaterResponseDto getTheaterByName(@PathVariable String name){
         return theaterService.getTheaterByName(name);
     }
 
     @PostMapping
-    public TheaterDto addTheater(@RequestBody TheaterDto theater){
+    public TheaterResponseDto addTheater(@RequestBody TheaterResponseDto theater){
         return theaterService.addTheater(theater);
     }
 }

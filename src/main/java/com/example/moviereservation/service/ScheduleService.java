@@ -1,29 +1,28 @@
 package com.example.moviereservation.service;
 
 
-import com.example.moviereservation.dto.MovieDto;
-import com.example.moviereservation.dto.ScheduleDto;
+import com.example.moviereservation.dto.response.MovieResponseDto;
+import com.example.moviereservation.dto.response.ScheduleResponseDto;
 import com.example.moviereservation.entity.Movie;
-import com.example.moviereservation.entity.Schedule;
 import com.example.moviereservation.entity.Theater;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ScheduleService {
-    List<ScheduleDto> getAll();
+    List<ScheduleResponseDto> getAll();
 
-    ScheduleDto getScheduleById(String id);
+    ScheduleResponseDto getScheduleById(Integer id);
 
-    ScheduleDto addSchedule(ScheduleDto schedule);
+    ScheduleResponseDto addSchedule(ScheduleResponseDto schedule);
 
-    ScheduleDto updateMovie(String scheduleId, Movie newMovie);
+    ScheduleResponseDto updateMovie(Integer scheduleId, Movie newMovie);
 
-    ScheduleDto updatePrice(String scheduleId, Double newPrice);
+    ScheduleResponseDto updatePrice(Integer scheduleId, Double newPrice);
 
-    ScheduleDto updateTheater(String scheduleId, Theater newTheater);
+    ScheduleResponseDto updateTheater(Integer scheduleId, Theater newTheater);
 
-    ScheduleDto changeTime(String scheduleId, LocalDateTime startTime, LocalDateTime endTime);
+    ScheduleResponseDto changeTime(Integer scheduleId, LocalDateTime startTime, LocalDateTime endTime);
 
-    MovieDto showMovie(String scheduleId);
+    MovieResponseDto showMovie(Integer scheduleId);
 }

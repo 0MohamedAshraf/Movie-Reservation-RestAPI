@@ -1,23 +1,27 @@
 package com.example.moviereservation.service;
 
-import com.example.moviereservation.dto.MovieDto;
-import com.example.moviereservation.entity.Movie;
+import com.example.moviereservation.dto.request.MovieRequestDto;
+import com.example.moviereservation.dto.response.MovieResponseDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MovieService {
-    List<MovieDto> getAll();
+    List<MovieResponseDto> getAll();
 
-    MovieDto getMovieById(String id);
+    MovieResponseDto getMovieById(Integer id);
 
-    MovieDto getMovieByTitle(String title);
+    MovieResponseDto getMovieByTitle(String title);
 
-    MovieDto addMovie(MovieDto movie);
+    MovieResponseDto addMovie(MovieRequestDto movie);
 
-    MovieDto updateMovie(MovieDto movie);
-    void deleteMovie(String id);
+    MovieResponseDto updateMovie(MovieRequestDto movie, Integer id);
 
-    List<MovieDto> filterByCategory(String category);
+    void deleteMovie(Integer id);
 
-    List<MovieDto> topRatedMovies();
+    List<MovieResponseDto> filterByCategory(String category);
+
+    List<MovieResponseDto> topRatedMovies();
+
+    List<MovieResponseDto> moviesReleasedAfter(LocalDate date);
 }

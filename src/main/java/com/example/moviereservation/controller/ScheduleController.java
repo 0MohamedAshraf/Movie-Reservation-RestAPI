@@ -1,16 +1,14 @@
 package com.example.moviereservation.controller;
 
-import com.example.moviereservation.dto.MovieDto;
-import com.example.moviereservation.dto.ScheduleDto;
-import com.example.moviereservation.entity.Movie;
-import com.example.moviereservation.entity.Schedule;
+import com.example.moviereservation.dto.response.MovieResponseDto;
+import com.example.moviereservation.dto.response.ScheduleResponseDto;
 import com.example.moviereservation.service.ScheduleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/schedule")
+@RequestMapping("/api/v1/schedule")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -20,27 +18,27 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public List<ScheduleDto> getAll(){
+    public List<ScheduleResponseDto> getAll(){
         return scheduleService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ScheduleDto getById(@PathVariable String id){
+    public ScheduleResponseDto getById(@PathVariable Integer id){
         return scheduleService.getScheduleById(id);
     }
 
     @GetMapping("/{scheduleId}/movie")
-    public MovieDto getMovie(@PathVariable String scheduleId){
+    public MovieResponseDto getMovie(@PathVariable Integer scheduleId){
         return scheduleService.showMovie(scheduleId);
     }
 
     @PostMapping
-    public ScheduleDto addSchedule(@RequestBody ScheduleDto schedule){
+    public ScheduleResponseDto addSchedule(@RequestBody ScheduleResponseDto schedule){
         return scheduleService.addSchedule(schedule);
     }
 
     @PutMapping
-    public ScheduleDto updateMovie(@RequestBody ScheduleDto newSchedule){
+    public ScheduleResponseDto updateMovie(@RequestBody ScheduleResponseDto newSchedule){
         return scheduleService.addSchedule(newSchedule);
     }
 }

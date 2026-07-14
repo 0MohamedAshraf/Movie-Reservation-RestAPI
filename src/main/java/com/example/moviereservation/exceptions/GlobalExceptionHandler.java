@@ -22,4 +22,11 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(InvalidMovieEntityException.class)
+    public ResponseEntity<String> invalidMovie(InvalidMovieEntityException exception){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
 }

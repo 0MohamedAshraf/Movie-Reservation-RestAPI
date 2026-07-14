@@ -1,6 +1,6 @@
 package com.example.moviereservation.service;
 
-import com.example.moviereservation.dto.TheaterDto;
+import com.example.moviereservation.dto.response.TheaterResponseDto;
 import com.example.moviereservation.entity.Theater;
 import com.example.moviereservation.mapper.TheaterMapper;
 import com.example.moviereservation.repository.TheaterRepository;
@@ -21,14 +21,14 @@ public class TheaterServiceImpl implements TheaterService{
     }
 
     @Override
-    public List<TheaterDto> getAll() {
+    public List<TheaterResponseDto> getAll() {
         return theaterRepository.findAll()
                 .stream()
                 .map(mapper::entityToDto).toList();
     }
 
     @Override
-    public TheaterDto getTheaterById(String id) {
+    public TheaterResponseDto getTheaterById(Integer id) {
         Theater theater = theaterRepository.findById(id).orElse(null);
         if(theater != null) return mapper.entityToDto(theater);
         else throw new RuntimeException("Couldn't find theater with Id: " + id);
@@ -36,14 +36,14 @@ public class TheaterServiceImpl implements TheaterService{
     }
 
     @Override
-    public TheaterDto getTheaterByName(String name) {
+    public TheaterResponseDto getTheaterByName(String name) {
         Theater theater = theaterRepository.findByName(name);
         if(theater != null) return mapper.entityToDto(theater);
         else throw new RuntimeException("Couldn't find theater with name: " + name);
     }
 
     @Override
-    public TheaterDto addTheater(TheaterDto theater) {
+    public TheaterResponseDto addTheater(TheaterResponseDto theater) {
         try {
              Theater theTheater = theaterRepository.save(mapper.dtoToEntity(theater));
              return mapper.entityToDto(theTheater);
@@ -56,7 +56,7 @@ public class TheaterServiceImpl implements TheaterService{
     }
 
     @Override
-    public List<TheaterDto> filterTheatersByCity(String city) {
+    public List<TheaterResponseDto> filterTheatersByCity(String city) {
         return List.of();
     }
 }

@@ -1,19 +1,19 @@
 package com.example.moviereservation.controller;
 
 
-import com.example.moviereservation.dto.MovieDto;
-import com.example.moviereservation.entity.Movie;
+import com.example.moviereservation.dto.request.MovieRequestDto;
+import com.example.moviereservation.dto.response.MovieResponseDto;
 import com.example.moviereservation.service.MovieService;
-import com.example.moviereservation.service.MovieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/movie")
+@RequestMapping("/api/v1/movie")
 public class MovieController {
 
     private final MovieService movieService;
@@ -24,61 +24,62 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieDto>> getAllMovies(){
-        List<MovieDto> movieList = movieService.getAll();
+    public ResponseEntity<List<MovieResponseDto>> getAllMovies(){
+        List<MovieResponseDto> movieList = movieService.getAll();
         return ResponseEntity.ok(movieList);
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<MovieDto> getMovieById(@PathVariable String id){
-        MovieDto movie = movieService.getMovieById(id);
+    public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Integer id){
+        MovieResponseDto movie = movieService.getMovieById(id);
         return ResponseEntity.ok(movie);
     }
 
     @GetMapping("/title/{title}")
-    public ResponseEntity<MovieDto> getMovieByTitle(@PathVariable String title){
-        MovieDto movie = movieService.getMovieByTitle(title);
+    public ResponseEntity<MovieResponseDto> getMovieByTitle(@PathVariable String title){
+        MovieResponseDto movie = movieService.getMovieByTitle(title);
         return ResponseEntity.ok(movie);
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<MovieDto>> filterByCategory(@PathVariable String category){
-        List<MovieDto> movies = movieService.filterByCategory(category);
+    public ResponseEntity<List<MovieResponseDto>> filterByCategory(@PathVariable String category){
+        List<MovieResponseDto> movies = movieService.filterByCategory(category);
         return ResponseEntity.ok(movies);
     }
 
     @GetMapping("/top")
-    public ResponseEntity<List<MovieDto>> topRatedMovies(){
-        List<MovieDto> movies = movieService.topRatedMovies();
+    public ResponseEntity<List<MovieResponseDto>> topRatedMovies(){
+        List<MovieResponseDto> movies = movieService.topRatedMovies();
         return ResponseEntity.ok(movies);
     }
 
+    @GetMapping("/afterDate/{date}")
+    public ResponseEntity<List<MovieResponseDto>> moviesAfterDate(@PathVariable LocalDate date){
+        return ResponseEntity
+                .ok(movieService.moviesReleasedAfter(date));
+    }
+
     @PostMapping
-    public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movie){
-        MovieDto theMovie = movieService.addMovie(movie);
+    public ResponseEntity<MovieResponseDto> addMovie(@RequestBody MovieRequestDto movie){
+        MovieResponseDto theMovie = movieService.addMovie(movie);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(theMovie);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDto> updateMovie(@PathVariable String id,@RequestBody MovieDto newMovie){
-        MovieDto theMovie = movieService.getMovieById(id);
+    public ResponseEntity<MovieResponseDto> updateMovie(@PathVariable Integer id, @RequestBody MovieRequestDto newMovie){
 
-        if(theMovie != null){
-            newMovie.setId(theMovie.getId());
-            MovieDto movie = movieService.updateMovie(newMovie);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(movie);
-        }
-        return null;
+        MovieResponseDto movie = movieService.updateMovie(newMovie, id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(movie);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMovie(@PathVariable String id){
+    public ResponseEntity<?> deleteMovie(@PathVariable Integer id){
         movieService.deleteMovie(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Deleted Successfully");
     }
 
 }

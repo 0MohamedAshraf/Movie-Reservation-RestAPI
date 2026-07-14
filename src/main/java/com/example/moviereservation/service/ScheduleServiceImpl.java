@@ -1,7 +1,7 @@
 package com.example.moviereservation.service;
 
-import com.example.moviereservation.dto.MovieDto;
-import com.example.moviereservation.dto.ScheduleDto;
+import com.example.moviereservation.dto.response.MovieResponseDto;
+import com.example.moviereservation.dto.response.ScheduleResponseDto;
 import com.example.moviereservation.entity.Movie;
 import com.example.moviereservation.entity.Schedule;
 import com.example.moviereservation.entity.Theater;
@@ -36,7 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         this.movieMapper = movieMapper;
     }
 
-    public void validateSchedule(ScheduleDto schedule){
+    public void validateSchedule(ScheduleResponseDto schedule){
         if(schedule.getEndTime().isBefore(schedule.getStartTime())){
             throw new RuntimeException("End Time Must be After start time");
         }
@@ -52,20 +52,20 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
     }
     @Override
-    public List<ScheduleDto> getAll() {
+    public List<ScheduleResponseDto> getAll() {
         return scheduleRepository.findAll()
                 .stream()
                 .map(mapper::entityToDto).toList();
     }
 
     @Override
-    public ScheduleDto getScheduleById(String id) {
+    public ScheduleResponseDto getScheduleById(Integer id) {
 
         return scheduleRepository.findById(id).map(mapper::entityToDto).orElseThrow();
     }
 
     @Override
-    public ScheduleDto addSchedule(ScheduleDto schedule) {
+    public ScheduleResponseDto addSchedule(ScheduleResponseDto schedule) {
 
 
         validateSchedule(schedule);
@@ -78,7 +78,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public ScheduleDto updateMovie(String scheduleId, Movie newMovie) {
+    public ScheduleResponseDto updateMovie(Integer scheduleId, Movie newMovie) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
         schedule.setMovie(newMovie);
         scheduleRepository.save(schedule);
@@ -87,7 +87,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public ScheduleDto updatePrice(String scheduleId, Double newPrice) {
+    public ScheduleResponseDto updatePrice(Integer scheduleId, Double newPrice) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
         schedule.setPrice(newPrice);
         scheduleRepository.save(schedule);
@@ -96,7 +96,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public ScheduleDto updateTheater(String scheduleId, Theater newTheater) {
+    public ScheduleResponseDto updateTheater(Integer scheduleId, Theater newTheater) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
         schedule.setTheater(newTheater);
         scheduleRepository.save(schedule);
@@ -105,7 +105,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public ScheduleDto changeTime(String scheduleId, LocalDateTime startTime, LocalDateTime endTime) {
+    public ScheduleResponseDto changeTime(Integer scheduleId, LocalDateTime startTime, LocalDateTime endTime) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
         schedule.setStartTime(startTime);
         schedule.setEndTime(endTime);
@@ -115,7 +115,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public MovieDto showMovie(String scheduleId) {
+    public MovieResponseDto showMovie(Integer scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
         return movieMapper.entityToDto(schedule.getMovie());
     }

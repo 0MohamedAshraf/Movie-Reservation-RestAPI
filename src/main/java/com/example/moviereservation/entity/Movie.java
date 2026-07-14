@@ -15,7 +15,8 @@ import java.util.List;
 @Table(name = "movie")
 public class Movie {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String title;
 
@@ -45,12 +46,12 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String id, String title, String description, Float rating, String category, Float duration) {
+    public Movie(Integer id, String title, String description, LocalDate releaseDate, Float rating, String category, Float duration) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.rating = rating;
-        this.releaseDate = LocalDate.now();
+        this.releaseDate = releaseDate;
         this.category = category;
         this.duration = duration;
     }

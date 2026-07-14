@@ -1,22 +1,21 @@
 package com.example.moviereservation.service;
 
-import com.example.moviereservation.dto.TheaterDto;
-import com.example.moviereservation.entity.Theater;
+import com.example.moviereservation.dto.response.TheaterResponseDto;
 
 import java.util.List;
 
 
 public interface TheaterService {
 
-    List<TheaterDto> getAll();
+    List<TheaterResponseDto> getAll();
 
-    TheaterDto getTheaterById(String id);
+    TheaterResponseDto getTheaterById(Integer id);
 
-    TheaterDto getTheaterByName(String name);
+    TheaterResponseDto getTheaterByName(String name);
 
-    TheaterDto addTheater(TheaterDto theater);
+    TheaterResponseDto addTheater(TheaterResponseDto theater);
 
-    List<TheaterDto> filterTheatersByCity(String city);
+    List<TheaterResponseDto> filterTheatersByCity(String city);
 
 
 
