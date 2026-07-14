@@ -1,24 +1,29 @@
 package com.example.moviereservation.service;
 
+import com.example.moviereservation.dto.request.TheaterRequestDto;
 import com.example.moviereservation.dto.response.TheaterResponseDto;
+import com.example.moviereservation.dto.response.TheaterScheduleDto;
 import com.example.moviereservation.entity.Theater;
+import com.example.moviereservation.exceptions.theater.TheaterNotFoundException;
 import com.example.moviereservation.mapper.TheaterMapper;
+import com.example.moviereservation.mapper.TheaterScheduleMapper;
 import com.example.moviereservation.repository.TheaterRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class TheaterServiceImpl implements TheaterService{
+
     private final TheaterRepository theaterRepository;
     private final TheaterMapper mapper;
+    private final TheaterScheduleMapper theaterScheduleMapper;
 
-    @Autowired
-    public TheaterServiceImpl(TheaterRepository theaterRepository, TheaterMapper mapper) {
-        this.theaterRepository = theaterRepository;
-        this.mapper = mapper;
-    }
+
 
     @Override
     public List<TheaterResponseDto> getAll() {
@@ -43,7 +48,7 @@ public class TheaterServiceImpl implements TheaterService{
     }
 
     @Override
-    public TheaterResponseDto addTheater(TheaterResponseDto theater) {
+    public TheaterResponseDto addTheater(TheaterRequestDto theater) {
         try {
              Theater theTheater = theaterRepository.save(mapper.dtoToEntity(theater));
              return mapper.entityToDto(theTheater);
@@ -58,5 +63,15 @@ public class TheaterServiceImpl implements TheaterService{
     @Override
     public List<TheaterResponseDto> filterTheatersByCity(String city) {
         return List.of();
+    }
+
+    @Override
+    public List<TheaterScheduleDto> getTheaterSchedules(Integer theaterId) {
+        Theater theTheater = theaterRepository.findById(theaterId).orElseThrow(
+                () -> new TheaterNotFoundException("Theater With Id: " + theaterId +" Not Found")
+        );
+        if(theTheater.getScheduleList() == null)
+            return Collections.emptyList();
+        return theTheater.getScheduleList().stream().map(theaterScheduleMapper::scheduleToDto).toList();
     }
 }

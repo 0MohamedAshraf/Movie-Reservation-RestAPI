@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Objects;
 
 @Setter
@@ -22,6 +23,9 @@ public class Theater {
 
     @Column(name = "total_seats")
     private Integer totalSeats;
+
+    @OneToMany(mappedBy = "theater")
+    private List<Schedule> scheduleList;
 
     public Theater() {
     }

@@ -1,5 +1,8 @@
 package com.example.moviereservation.exceptions;
 
+import com.example.moviereservation.exceptions.movie.InvalidMovieEntityException;
+import com.example.moviereservation.exceptions.movie.MovieAlreadyExistsException;
+import com.example.moviereservation.exceptions.movie.MovieNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

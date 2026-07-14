@@ -1,6 +1,6 @@
-package com.example.moviereservation.dto.response;
+package com.example.moviereservation.dto.request;
 
-
+import com.example.moviereservation.dto.response.ScheduleResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TheaterResponseDto {
-    private Integer id;
+public class TheaterRequestDto {
 
     private String name;
 
@@ -21,7 +20,4 @@ public class TheaterResponseDto {
 
     private Integer totalSeats;
 
-    List<TheaterScheduleDto> upcomingSchedules;
-
 }
-

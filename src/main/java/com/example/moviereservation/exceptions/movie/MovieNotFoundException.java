@@ -1,4 +1,4 @@
-package com.example.moviereservation.exceptions;
+package com.example.moviereservation.exceptions.movie;
 
 public class MovieNotFoundException extends RuntimeException {
     public MovieNotFoundException(String message){
