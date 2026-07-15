@@ -4,12 +4,13 @@ import com.example.moviereservation.dto.request.TheaterRequestDto;
 import com.example.moviereservation.dto.response.TheaterResponseDto;
 import com.example.moviereservation.dto.response.TheaterScheduleDto;
 import com.example.moviereservation.entity.Theater;
-import com.example.moviereservation.exceptions.theater.TheaterNotFoundException;
+import com.example.moviereservation.exceptions.EntityAlreadyExistsException;
+import com.example.moviereservation.exceptions.InvalidEntityException;
+import com.example.moviereservation.exceptions.ResourceNotFoundException;
 import com.example.moviereservation.mapper.TheaterMapper;
 import com.example.moviereservation.mapper.TheaterScheduleMapper;
 import com.example.moviereservation.repository.TheaterRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -25,6 +26,11 @@ public class TheaterServiceImpl implements TheaterService{
 
 
 
+    private void validateTheater(TheaterRequestDto theater){
+
+        if(theater.getTotalSeats() <= 0)
+            throw new InvalidEntityException("Theater should contain at least 1 seat");
+    }
     @Override
     public List<TheaterResponseDto> getAll() {
         return theaterRepository.findAll()
@@ -34,44 +40,57 @@ public class TheaterServiceImpl implements TheaterService{
 
     @Override
     public TheaterResponseDto getTheaterById(Integer id) {
-        Theater theater = theaterRepository.findById(id).orElse(null);
-        if(theater != null) return mapper.entityToDto(theater);
-        else throw new RuntimeException("Couldn't find theater with Id: " + id);
-
+        Theater theater = theaterRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Theater with id: " + id + " Not Found")
+        );
+        return mapper.entityToDto(theater);
     }
 
     @Override
     public TheaterResponseDto getTheaterByName(String name) {
         Theater theater = theaterRepository.findByName(name);
         if(theater != null) return mapper.entityToDto(theater);
-        else throw new RuntimeException("Couldn't find theater with name: " + name);
+        else throw new ResourceNotFoundException("Couldn't find theater with name \"" + name + "\"");
     }
 
     @Override
     public TheaterResponseDto addTheater(TheaterRequestDto theater) {
-        try {
-             Theater theTheater = theaterRepository.save(mapper.dtoToEntity(theater));
-             return mapper.entityToDto(theTheater);
-        }catch (IllegalArgumentException exp){
-            System.out.println(exp.getMessage());
-        }catch (Exception e){
-            System.out.println("Unknown Exception: " + e.getMessage());
-        }
-        return null;
+        validateTheater(theater);
+        if(theaterRepository.existsByNameAndCity(theater.getName(),theater.getCity()))
+            throw new EntityAlreadyExistsException("There is a Theater with this name in the same city");
+        Theater theTheater = theaterRepository.save(mapper.dtoToEntity(theater));
+        return mapper.entityToDto(theTheater);
     }
 
     @Override
     public List<TheaterResponseDto> filterTheatersByCity(String city) {
-        return List.of();
+        List<Theater> theaters = theaterRepository.findByCity(city);
+        return theaters
+                .stream()
+                .map(mapper::entityToDto)
+                .toList();
     }
 
     @Override
     public List<TheaterScheduleDto> getTheaterSchedules(Integer theaterId) {
         Theater theTheater = theaterRepository.findById(theaterId).orElseThrow(
-                () -> new TheaterNotFoundException("Theater With Id: " + theaterId +" Not Found")
+                () -> new ResourceNotFoundException("Theater With Id: " + theaterId +" Not Found")
         );
         if(theTheater.getScheduleList() == null)
             return Collections.emptyList();
         return theTheater.getScheduleList().stream().map(theaterScheduleMapper::scheduleToDto).toList();
+    }
+
+    @Override
+    public TheaterResponseDto updateTheater(TheaterRequestDto theater, Integer id) {
+        validateTheater(theater);
+        getTheaterById(id);
+            return mapper.entityToDto(theaterRepository.save(mapper.dtoToEntity(theater)));
+    }
+
+    @Override
+    public void deleteTheater(Integer theaterId) {
+        if (getTheaterById(theaterId) != null)
+            theaterRepository.deleteById(theaterId);
     }
 }

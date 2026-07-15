@@ -3,9 +3,9 @@ package com.example.moviereservation.service;
 import com.example.moviereservation.dto.request.MovieRequestDto;
 import com.example.moviereservation.dto.response.MovieResponseDto;
 import com.example.moviereservation.entity.Movie;
-import com.example.moviereservation.exceptions.movie.InvalidMovieEntityException;
-import com.example.moviereservation.exceptions.movie.MovieAlreadyExistsException;
-import com.example.moviereservation.exceptions.movie.MovieNotFoundException;
+import com.example.moviereservation.exceptions.InvalidEntityException;
+import com.example.moviereservation.exceptions.EntityAlreadyExistsException;
+import com.example.moviereservation.exceptions.ResourceNotFoundException;
 import com.example.moviereservation.mapper.MovieMapper;
 import com.example.moviereservation.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class MovieServiceImpl implements MovieService {
 
     private void validateMovie(MovieRequestDto movie){
         if(movie.getRating() > 5 || movie.getRating() < 0)
-            throw new InvalidMovieEntityException("Movie Rating Must be between 0-5");
+            throw new InvalidEntityException("Movie Rating Must be between 0-5");
         if(movie.getDuration() < 0)
-            throw new InvalidMovieEntityException("Movie Duration Must be positive");
+            throw new InvalidEntityException("Movie Duration Must be positive");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponseDto getMovieById(Integer id){
         Movie theMovie = movieRepository.findById(id)
                 .orElseThrow(
-                        () -> new MovieNotFoundException("Movie With ID: " + id + " Not Found")
+                        () -> new ResourceNotFoundException("Movie With ID: " + id + " Not Found")
                 );
 
         return mapper.entityToDto(theMovie);
@@ -59,7 +59,7 @@ public class MovieServiceImpl implements MovieService {
 
         Movie theMovie =  movieRepository.findByTitle(title);
         if(theMovie == null)
-            throw new MovieNotFoundException("Movie With title \"" + title + "\" Not Found");
+            throw new ResourceNotFoundException("Movie With title \"" + title + "\" Not Found");
         return mapper.entityToDto(theMovie);
     }
 
@@ -67,7 +67,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponseDto addMovie(MovieRequestDto movie){
         validateMovie(movie);
         if(movieRepository.existsByTitle(movie.getTitle()))
-            throw new MovieAlreadyExistsException("Movie \"" + movie.getTitle() + "\" Already Exists");
+            throw new EntityAlreadyExistsException("Movie \"" + movie.getTitle() + "\" Already Exists");
 
         Movie theMovie =  movieRepository.save(mapper.dtoToEntity(movie));
         return mapper.entityToDto(theMovie);
@@ -78,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponseDto updateMovie(MovieRequestDto movie,Integer id) {
         validateMovie(movie);
         Movie theMovie = movieRepository.findById(id).orElseThrow(
-                () -> new MovieNotFoundException("No Movie Found With Id: " + id)
+                () -> new ResourceNotFoundException("No Movie Found With Id: " + id)
         );
         Movie newMovie = mapper.dtoToEntity(movie);
         newMovie.setId(id);
@@ -91,7 +91,7 @@ public class MovieServiceImpl implements MovieService {
     public void deleteMovie(Integer id){
         if(getMovieById(id) != null)
             movieRepository.deleteById(id);
-        else throw new MovieNotFoundException("Movie with id: " + id + " Not found");
+        else throw new ResourceNotFoundException("Movie with id: " + id + " Not found");
     }
 
     @Override
@@ -120,7 +120,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieResponseDto> moviesReleasedAfter(LocalDate date) {
         if (date.isAfter(LocalDate.now()))
-            throw new MovieNotFoundException("Please Enter Valid Date");
+            throw new ResourceNotFoundException("Please Enter Valid Date");
         List<Movie> movieList = movieRepository.findByReleaseDateAfter(date);
         if(movieList == null)
             return Collections.emptyList();

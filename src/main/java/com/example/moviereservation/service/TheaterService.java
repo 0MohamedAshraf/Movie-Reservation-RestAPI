@@ -21,6 +21,8 @@ public interface TheaterService {
 
     List<TheaterScheduleDto> getTheaterSchedules(Integer theaterId);
 
+    TheaterResponseDto updateTheater(TheaterRequestDto theater, Integer id);
 
+    void deleteTheater(Integer theaterId);
 
 }
