@@ -1,9 +1,12 @@
 package com.example.moviereservation.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -11,6 +14,8 @@ import java.util.Date;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "schedules")
 public class Schedule {
 
@@ -24,7 +29,7 @@ public class Schedule {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    private Date date;
+    private LocalDate date;
 
     private Double price;
 
@@ -36,17 +41,5 @@ public class Schedule {
     @JoinColumn(name = "theater_id", nullable = false)
     private Theater theater;
 
-    public Schedule() {
-    }
-
-    public Schedule(Integer id, LocalDateTime startTime, LocalDateTime endTime, Date date, Double price, Movie movie, Theater theater) {
-        this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.date = date;
-        this.price = price;
-        this.movie = movie;
-        this.theater = theater;
-    }
 
 }

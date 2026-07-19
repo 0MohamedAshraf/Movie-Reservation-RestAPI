@@ -1,5 +1,4 @@
-package com.example.moviereservation.dto.response;
-
+package com.example.moviereservation.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScheduleResponseDto {
-    private Integer id;
+public class ScheduleRequestDto {
 
     private LocalDateTime startTime;
 

@@ -1,5 +1,6 @@
 package com.example.moviereservation.mapper;
 
+import com.example.moviereservation.dto.request.ScheduleRequestDto;
 import com.example.moviereservation.dto.response.ScheduleResponseDto;
 import com.example.moviereservation.entity.Movie;
 import com.example.moviereservation.entity.Schedule;
@@ -21,14 +22,14 @@ public class ScheduleMapper {
         );
     }
 
-    public Schedule dtoToEntity(ScheduleResponseDto scheduleResponseDto, Movie movie, Theater theater){
+    public Schedule dtoToEntity(ScheduleRequestDto scheduleRequestDto, Movie movie, Theater theater){
 
         return new Schedule(
-                scheduleResponseDto.getId(),
-                scheduleResponseDto.getStartTime(),
-                scheduleResponseDto.getEndTime(),
-                scheduleResponseDto.getDate(),
-                scheduleResponseDto.getPrice(),
+                null,
+                scheduleRequestDto.getStartTime(),
+                scheduleRequestDto.getEndTime(),
+                scheduleRequestDto.getDate(),
+                scheduleRequestDto.getPrice(),
                 movie,
                 theater
         );

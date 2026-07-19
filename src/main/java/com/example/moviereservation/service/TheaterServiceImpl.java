@@ -85,7 +85,9 @@ public class TheaterServiceImpl implements TheaterService{
     public TheaterResponseDto updateTheater(TheaterRequestDto theater, Integer id) {
         validateTheater(theater);
         getTheaterById(id);
-            return mapper.entityToDto(theaterRepository.save(mapper.dtoToEntity(theater)));
+        Theater newTheater = mapper.dtoToEntity(theater);
+        newTheater.setId(id);
+            return mapper.entityToDto(theaterRepository.save(newTheater));
     }
 
     @Override

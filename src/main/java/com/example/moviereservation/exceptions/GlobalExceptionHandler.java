@@ -29,4 +29,11 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(ScheduleOverlapException.class)
+    public ResponseEntity<String> scheduleOverlap(ScheduleOverlapException exception){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+
 }

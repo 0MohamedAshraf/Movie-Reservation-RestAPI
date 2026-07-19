@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class TheaterScheduleDto {
 
     private LocalDateTime endTime;
 
-    private Date date;
+    private LocalDate date;
 
     private Double price;
 

@@ -2,11 +2,15 @@ package com.example.moviereservation.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "reservation_seat")
 public class ReservationSeat {
@@ -25,13 +29,6 @@ public class ReservationSeat {
     private ScheduleSeat scheduleSeat;
 
 
-    public ReservationSeat() {
-    }
 
-    public ReservationSeat(Integer id, Reservation reservation, ScheduleSeat scheduleSeat) {
-        this.id = id;
-        this.reservation = reservation;
-        this.scheduleSeat = scheduleSeat;
-    }
 
 }
