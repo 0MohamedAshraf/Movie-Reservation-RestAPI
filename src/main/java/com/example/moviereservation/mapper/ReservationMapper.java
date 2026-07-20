@@ -3,7 +3,7 @@ package com.example.moviereservation.mapper;
 import com.example.moviereservation.dto.request.ReservationRequestDto;
 import com.example.moviereservation.dto.response.ReservationResponseDto;
 import com.example.moviereservation.entity.Reservation;
-import com.example.moviereservation.entity.Schedule;
+import com.example.moviereservation.enums.ReservationStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -28,7 +28,7 @@ public class ReservationMapper {
         Reservation reservation = new Reservation();
 
         reservation.setPaymentMethod(request.getPaymentMethod());
-        reservation.setStatus("PENDING");
+        reservation.setStatus(ReservationStatus.PENDING);
         return reservation;
     }
 }

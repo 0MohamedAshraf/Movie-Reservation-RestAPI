@@ -1,5 +1,6 @@
 package com.example.moviereservation.entity;
 
+import com.example.moviereservation.enums.SeatClass;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,8 @@ public class Seat {
     private Integer seatNum;
 
     @Column(name = "class")
-    private String seatClass;
+    @Enumerated(EnumType.STRING)
+    private SeatClass seatClass;
 
     @ManyToOne
     @JoinColumn(name = "theater_id",nullable = false)

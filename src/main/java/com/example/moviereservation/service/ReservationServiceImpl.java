@@ -3,6 +3,7 @@ package com.example.moviereservation.service;
 import com.example.moviereservation.dto.request.ReservationRequestDto;
 import com.example.moviereservation.dto.response.ReservationResponseDto;
 import com.example.moviereservation.entity.*;
+import com.example.moviereservation.enums.ReservationStatus;
 import com.example.moviereservation.exceptions.InvalidEntityException;
 import com.example.moviereservation.exceptions.ResourceNotFoundException;
 import com.example.moviereservation.mapper.ReservationMapper;
@@ -83,8 +84,21 @@ public class ReservationServiceImpl implements ReservationService {
         return dto;
     }
 
+    @Transactional
     @Override
     public void cancelReservation(Integer reservationId) {
+        Reservation reservation = repository.findById(reservationId).orElseThrow(
+                () -> new ResourceNotFoundException("Reservation with id: " + reservationId + " Not Found")
+        );
+        if (reservation.getStatus().equals(ReservationStatus.CANCELLED))
+            throw new InvalidEntityException("Reservation Already cancelled");
 
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        List<ScheduleSeat> reservedSeats = reservationSeatRepository.getReservedSeats(reservationId);
+        for (ScheduleSeat seat : reservedSeats){
+            seat.setAvailable(true);
+        }
+        scheduleSeatService.saveAll(reservedSeats);
+        reservationSeatRepository.deleteAllByReservationId(reservationId);
     }
 }

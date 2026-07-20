@@ -1,5 +1,6 @@
 package com.example.moviereservation.entity;
 
+import com.example.moviereservation.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +35,8 @@ public class User {
     private String city;
 
     @Column(name = "role", nullable = false, length = 100)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.moviereservation.dto.request;
 
+import com.example.moviereservation.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ReservationRequestDto {
 
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
 
     private Integer userId;
 

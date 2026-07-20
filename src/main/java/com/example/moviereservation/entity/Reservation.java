@@ -1,6 +1,8 @@
 package com.example.moviereservation.entity;
 
 
+import com.example.moviereservation.enums.PaymentMethod;
+import com.example.moviereservation.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +22,8 @@ public class Reservation {
     private Integer id;
 
     @Column(name = "payment_method")
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Column(name = "total_price")
     private Float totalPrice;
@@ -28,7 +31,8 @@ public class Reservation {
     @Column(name = "booking_date")
     private LocalDate bookingDate;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
