@@ -1,11 +1,15 @@
 package com.example.moviereservation.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -32,17 +36,5 @@ public class User {
     @Column(name = "role", nullable = false, length = 100)
     private String role;
 
-    public User() {
-    }
-
-    public User(Integer id, String firstName, String lastName, String email, String password, String city, String role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.city = city;
-        this.role = role;
-    }
 
 }

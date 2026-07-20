@@ -1,7 +1,5 @@
 package com.example.moviereservation.service;
 
-import com.example.moviereservation.dto.request.ScheduleSeatRequestDto;
-import com.example.moviereservation.dto.response.ScheduleSeatResponseDto;
 import com.example.moviereservation.entity.Schedule;
 import com.example.moviereservation.entity.ScheduleSeat;
 
@@ -9,21 +7,27 @@ import java.util.List;
 
 public interface ScheduleSeatService {
 
-    List<ScheduleSeatResponseDto> getAllSeats();
+    List<ScheduleSeat> getAllSeats();
 
-    ScheduleSeatResponseDto getById(Integer id);
+    List<ScheduleSeat> getAllByIds(List<Integer> ids);
 
-    ScheduleSeatResponseDto markAvailable(Integer id);
+    ScheduleSeat getById(Integer id);
 
-    ScheduleSeatResponseDto markUnavailable(Integer id);
+    ScheduleSeat markAvailable(Integer id);
 
-    ScheduleSeatResponseDto setAvailability(Integer id,Boolean availability);
+    ScheduleSeat markUnavailable(Integer id);
 
-    List<ScheduleSeatResponseDto> getByScheduleId(Integer scheduleId);
+    ScheduleSeat setAvailability(Integer id, Boolean availability);
 
-    List<ScheduleSeatResponseDto> getAvailableSeats(Integer scheduleId);
+    List<ScheduleSeat> getByScheduleId(Integer scheduleId);
+
+    List<ScheduleSeat> getAvailableSeats(Integer scheduleId);
 
     boolean isAvailable(Integer seatId);
 
-    List<ScheduleSeatResponseDto> generateScheduleSeats(Schedule schedule);
+    void generateScheduleSeats(Schedule schedule);
+
+    boolean seatsExists(Integer scheduleId);
+
+    List<ScheduleSeat> saveAll(Iterable<ScheduleSeat> seats);
 }

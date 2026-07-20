@@ -1,6 +1,5 @@
 package com.example.moviereservation.service;
 
-import com.example.moviereservation.dto.response.ScheduleSeatResponseDto;
 import com.example.moviereservation.entity.Schedule;
 import com.example.moviereservation.entity.ScheduleSeat;
 import com.example.moviereservation.entity.Seat;
@@ -23,67 +22,61 @@ public class ScheduleSeatServiceImpl implements ScheduleSeatService {
     private final ScheduleSeatMapper mapper;
 
     @Override
-    public List<ScheduleSeatResponseDto> getAllSeats() {
-        return repository.findAll()
-                .stream()
-                .map(mapper::entityToDto)
-                .toList();
+    public List<ScheduleSeat> getAllSeats() {
+        return repository.findAll();
     }
 
     @Override
-    public ScheduleSeatResponseDto getById(Integer id) {
-        ScheduleSeat theSeat = repository.findById(id).orElseThrow(
+    public List<ScheduleSeat> getAllByIds(List<Integer> ids) {
+        return repository.findAllById(ids);
+    }
+
+    @Override
+    public ScheduleSeat getById(Integer id) {
+        return repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There is no Schedule Seat with id: " + id)
         );
-
-        return mapper.entityToDto(theSeat);
     }
 
     @Override
-    public ScheduleSeatResponseDto markAvailable(Integer id) {
+    public ScheduleSeat markAvailable(Integer id) {
         ScheduleSeat theSeat = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There is no Schedule Seat with id: " + id)
         );
         theSeat.setAvailable(true);
         repository.save(theSeat);
-        return mapper.entityToDto(theSeat);
+        return theSeat;
     }
 
     @Override
-    public ScheduleSeatResponseDto markUnavailable(Integer id) {
+    public ScheduleSeat markUnavailable(Integer id) {
         ScheduleSeat theSeat = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There is no Schedule Seat with id: " + id)
         );
         theSeat.setAvailable(false);
         repository.save(theSeat);
-        return mapper.entityToDto(theSeat);
+        return theSeat;
     }
 
     @Override
-    public ScheduleSeatResponseDto setAvailability(Integer id, Boolean availability) {
+    public ScheduleSeat setAvailability(Integer id, Boolean availability) {
         ScheduleSeat theSeat = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There is no Schedule Seat with id: " + id)
         );
         theSeat.setAvailable(availability);
         repository.save(theSeat);
-        return mapper.entityToDto(theSeat);
+        return theSeat;
     }
 
     @Override
-    public List<ScheduleSeatResponseDto> getByScheduleId(Integer scheduleId) {
+    public List<ScheduleSeat> getByScheduleId(Integer scheduleId) {
 
-        return repository.getByScheduleId(scheduleId)
-                .stream()
-                .map(mapper::entityToDto)
-                .toList();
+        return repository.getByScheduleId(scheduleId);
     }
 
     @Override
-    public List<ScheduleSeatResponseDto> getAvailableSeats(Integer scheduleId) {
-        return repository.getByScheduleId(scheduleId)
-                .stream()
-                .map(mapper::entityToDto)
-                .toList();
+    public List<ScheduleSeat> getAvailableSeats(Integer scheduleId) {
+        return repository.getByScheduleId(scheduleId);
     }
 
     @Override
@@ -95,9 +88,11 @@ public class ScheduleSeatServiceImpl implements ScheduleSeatService {
     }
 
     @Override
-    public List<ScheduleSeatResponseDto> generateScheduleSeats(Schedule schedule) {
+    public void generateScheduleSeats(Schedule schedule) {
         Theater theater = schedule.getTheater();
         List<Seat> seats = seatRepository.getByTheaterId(theater.getId());
+        if (seats.isEmpty())
+            throw new IllegalArgumentException("Theater Has no seats");
         List<ScheduleSeat> scheduleSeats = new ArrayList<>();
 
         for(int i = 0;i < theater.getTotalSeats();i++){
@@ -106,9 +101,15 @@ public class ScheduleSeatServiceImpl implements ScheduleSeatService {
         List<ScheduleSeat> savedSeats =
                 repository.saveAll(scheduleSeats);
 
-        return savedSeats
-                .stream()
-                .map(mapper::entityToDto)
-                .toList();
+    }
+
+    @Override
+    public boolean seatsExists(Integer scheduleId) {
+        return repository.existsByScheduleId(scheduleId);
+    }
+
+    @Override
+    public List<ScheduleSeat> saveAll(Iterable<ScheduleSeat> seats) {
+        return repository.saveAll(seats);
     }
 }

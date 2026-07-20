@@ -27,6 +27,7 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService{
 
 
+    private final ScheduleSeatService scheduleSeatService;
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final TheaterRepository theaterRepository;
@@ -80,6 +81,12 @@ public class ScheduleServiceImpl implements ScheduleService{
         );
 
         Schedule theSchedule = scheduleRepository.save(mapper.dtoToEntity(schedule,movie,theater));
+
+        if(scheduleSeatService.seatsExists(theSchedule.getId()))
+            throw new IllegalArgumentException("Schedule Seats already generated");
+
+        scheduleSeatService.generateScheduleSeats(theSchedule);
+
         return mapper.entityToDto(theSchedule);
     }
 

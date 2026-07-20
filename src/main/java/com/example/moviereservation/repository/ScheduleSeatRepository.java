@@ -11,4 +11,6 @@ public interface ScheduleSeatRepository extends JpaRepository<ScheduleSeat,Integ
 
     List<ScheduleSeat> getByScheduleId(Integer scheduleId);
 
+    boolean existsByScheduleId(Integer scheduleId);
+
 }

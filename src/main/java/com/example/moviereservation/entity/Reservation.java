@@ -2,13 +2,17 @@ package com.example.moviereservation.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Reservation {
     @Id
@@ -22,7 +26,9 @@ public class Reservation {
     private Float totalPrice;
 
     @Column(name = "booking_date")
-    private Date bookingDate;
+    private LocalDate bookingDate;
+
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -32,15 +38,6 @@ public class Reservation {
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
-    public Reservation() {
-    }
 
-    public Reservation(Integer id, String paymentMethod, Float totalPrice, Date bookingDate, Schedule schedule) {
-        this.id = id;
-        this.paymentMethod = paymentMethod;
-        this.totalPrice = totalPrice;
-        this.bookingDate = bookingDate;
-        this.schedule = schedule;
-    }
 
 }
