@@ -29,6 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
     private final ScheduleSeatService scheduleSeatService;
+    private final PricingService pricingService;
 
     private void validateScheduleSeats(List<ScheduleSeat> seats,Integer scheduleId){
         seats.forEach(
@@ -60,8 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ResourceNotFoundException("Schedule Seats not Found");
         validateScheduleSeats(scheduleSeats,schedule.getId());
 
-        // move it later to a separate method to add tax and for each seat class pricing
-        float totalPrice = (float) (schedule.getPrice() * request.getScheduleSeatIds().size());
+        float totalPrice = (float) pricingService.calculatePrice(scheduleSeats,schedule);
 
         Reservation reservation = mapper.toEntity(request);
         reservation.setSchedule(schedule);
