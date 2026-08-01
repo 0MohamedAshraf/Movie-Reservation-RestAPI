@@ -11,6 +11,8 @@ public interface ScheduleSeatService {
 
     List<ScheduleSeat> getAllByIds(List<Integer> ids);
 
+    List<ScheduleSeat> getAllByIdsForUpdate(List<Integer> ids);
+
     ScheduleSeat getById(Integer id);
 
     ScheduleSeat markAvailable(Integer id);

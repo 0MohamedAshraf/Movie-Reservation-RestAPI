@@ -32,6 +32,11 @@ public class ScheduleSeatServiceImpl implements ScheduleSeatService {
     }
 
     @Override
+    public List<ScheduleSeat> getAllByIdsForUpdate(List<Integer> ids) {
+        return repository.getScheduleSeatsForUpdate(ids);
+    }
+
+    @Override
     public ScheduleSeat getById(Integer id) {
         return repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There is no Schedule Seat with id: " + id)

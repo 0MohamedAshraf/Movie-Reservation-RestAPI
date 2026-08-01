@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
         User user = userRepository.findById(request.getUserId()).orElseThrow(
                 () -> new ResourceNotFoundException("User with Id: " + request.getUserId() + "Not Found")
         );
-        List<ScheduleSeat> scheduleSeats = scheduleSeatService.getAllByIds(
+        List<ScheduleSeat> scheduleSeats = scheduleSeatService.getAllByIdsForUpdate(
                 request.getScheduleSeatIds().stream()
                         .distinct()
                         .toList());
