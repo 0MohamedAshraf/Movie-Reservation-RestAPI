@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST,"/api/v1/movie/**")
+                        .requestMatchers(HttpMethod.POST,"/api/v1/movie/**","/api/v1/schedule/**","/api/v1/theater/**")
                         .hasRole(UserRole.ADMIN.name())
 
                         .requestMatchers(HttpMethod.PUT,"/api/v1/movie/**")

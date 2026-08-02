@@ -10,10 +10,14 @@ A REST API for browsing movies and showtimes, and booking seats at a theater, bu
 - **Seats** — each schedule auto-generates its own set of bookable seats, tracked as available/unavailable
 - **Reservations** — book one or more seats for a schedule, with automatic pricing, seat-availability checks, and cancellation (which releases the seats back for booking)
 
+- **Auth** — user registration and login with JWT-based authentication
+- **Access control** — role-based authorization (`ADMIN` / `CUSTOMER`) restricting movie, theater, and schedule management to admins
+
 ## Tech Stack
 
 - Java 17
-- Spring Boot 4.1.0 (`spring-boot-starter-webmvc`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`)
+- Spring Boot 4.1.0 (`spring-boot-starter-webmvc`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`)
+- Spring Security with JWT (`jjwt`)
 - MySQL (via `mysql-connector-j`)
 - Lombok
 - Maven
@@ -53,6 +57,36 @@ spring.datasource.password=your-password
 The API will start on `http://localhost:8080` by default. All endpoints are prefixed with `/api/v1`.
 
 ## API Reference
+
+### Auth — `/api/v1/auth`
+
+| Method | Endpoint         | Description                                  |
+|--------|-------------------|-----------------------------------------------|
+| POST   | `/auth/register`  | Register a new user and receive a JWT         |
+| POST   | `/auth/login`      | Log in with email/password and receive a JWT |
+
+**Example register payload:**
+
+```json
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane@example.com",
+  "password": "secret123",
+  "city": "Cairo"
+}
+```
+
+All other endpoints require a valid JWT sent as `Authorization: Bearer <token>`. Creating, updating, or deleting movies, theaters, and schedules additionally requires the `ADMIN` role.
+
+### Users — `/api/v1/user`
+
+| Method | Endpoint                     | Description                        |
+|--------|--------------------------------|-------------------------------------|
+| GET    | `/user/{id}`                   | Get a user by ID                   |
+| GET    | `/user/{userId}/reservations`  | Get a user's reservations          |
+| PUT    | `/user/{id}`                   | Update a user                      |
+| DELETE | `/user/{id}`                   | Delete a user                      |
 
 ### Movies — `/api/v1/movie`
 
@@ -160,7 +194,7 @@ The total price is calculated automatically from the schedule's price and number
 - **Schedule** — start/end time, date, price; belongs to one `Movie` and one `Theater`; has many `ScheduleSeat`s
 - **Seat** — a physical seat (row, seat number, class: `STANDARD` / `PREMIUM` / `VIP`) belonging to a `Theater`
 - **ScheduleSeat** — a `Seat` as booked/available for a specific `Schedule`
-- **User** — first name, last name, email, password, city, role (`ADMIN` / `CUSTOMER`)
+- **User** — first name, last name, email, password (hashed), city, role (`ADMIN` / `CUSTOMER`); authenticates via JWT
 - **Reservation** — payment method (`CASH` / `CREDIT_CARD` / `DEBIT_CARD` / `WALLET`), total price, booking date, status (`PENDING` / `CONFIRMED` / `CANCELLED` / `EXPIRED`); belongs to one `User` and one `Schedule`
 - **ReservationSeat** — join between a `Reservation` and the `ScheduleSeat`s it booked
 - **Actor** — name, bio; many-to-many with `Movie`
@@ -181,16 +215,18 @@ Errors are returned as plain-text messages with the following status codes:
 
 ```
 src/main/java/com/example/moviereservation/
-├── controller/       # REST controllers (Movie, Theater, Schedule, Reservation)
+├── auth/               # Registration/login controller and service
+├── controller/         # REST controllers (Movie, Theater, Schedule, Reservation, User)
 ├── dto/
-│   ├── request/       # Incoming request payloads
-│   └── response/       # Outgoing response payloads
-├── entity/            # JPA entities (Movie, Theater, Schedule, Seat, ScheduleSeat, User, Reservation, ReservationSeat, Actor)
-├── enums/              # PaymentMethod, ReservationStatus, SeatClass, UserRole
-├── exceptions/         # Custom exceptions + global exception handler
-├── mapper/             # Entity <-> DTO mappers
-├── repository/         # Spring Data JPA repositories
-├── service/            # Business logic interfaces + implementations
+│   ├── request/         # Incoming request payloads
+│   └── response/        # Outgoing response payloads
+├── entity/             # JPA entities (Movie, Theater, Schedule, Seat, ScheduleSeat, User, Reservation, ReservationSeat, Actor)
+├── enums/               # PaymentMethod, ReservationStatus, SeatClass, UserRole
+├── exceptions/          # Custom exceptions + global exception handler
+├── mapper/              # Entity <-> DTO mappers
+├── repository/          # Spring Data JPA repositories
+├── security/            # JWT filter/service and Spring Security configuration
+├── service/             # Business logic interfaces + implementations
 └── MovieReservationApplication.java
 ```
 
