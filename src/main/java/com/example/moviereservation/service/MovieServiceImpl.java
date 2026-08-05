@@ -9,6 +9,10 @@ import com.example.moviereservation.exceptions.ResourceNotFoundException;
 import com.example.moviereservation.mapper.MovieMapper;
 import com.example.moviereservation.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,10 +40,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponseDto> getAll(){
-        return movieRepository.findAll()
-                .stream()
-                .map(mapper::entityToDto).toList();
+    public Page<MovieResponseDto> getAll(int pageNum, int size, Sort.Direction direction, String sortCol){
+        Pageable page = PageRequest.of(pageNum, size,direction,sortCol);
+
+        return movieRepository.findAll(page)
+                .map(mapper::entityToDto);
     }
 
     @Override
@@ -106,15 +111,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponseDto> topRatedMovies() {
-        List<Movie> movies = movieRepository.findTopRated();
-        if (movies == null)
-            return Collections.emptyList();
+    public Page<MovieResponseDto> topRatedMovies(int pageNum,int size) {
+        Pageable page = PageRequest.of(pageNum,size);
 
-        return movies
-                .stream()
-                .map(mapper::entityToDto)
-                .toList();
+        Page<Movie> movies = movieRepository.findTopRated(page);
+
+        return movies.map(mapper::entityToDto);
     }
 
     @Override

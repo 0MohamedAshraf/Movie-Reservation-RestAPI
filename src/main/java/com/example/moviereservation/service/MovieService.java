@@ -2,12 +2,14 @@ package com.example.moviereservation.service;
 
 import com.example.moviereservation.dto.request.MovieRequestDto;
 import com.example.moviereservation.dto.response.MovieResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface MovieService {
-    List<MovieResponseDto> getAll();
+    Page<MovieResponseDto> getAll(int pageNum, int size, Sort.Direction direction,String sortCol);
 
     MovieResponseDto getMovieById(Integer id);
 
@@ -21,7 +23,7 @@ public interface MovieService {
 
     List<MovieResponseDto> filterByCategory(String category);
 
-    List<MovieResponseDto> topRatedMovies();
+    Page<MovieResponseDto> topRatedMovies(int pageNum,int size);
 
     List<MovieResponseDto> moviesReleasedAfter(LocalDate date);
 }

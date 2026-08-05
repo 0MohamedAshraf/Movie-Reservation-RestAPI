@@ -1,6 +1,8 @@
 package com.example.moviereservation.repository;
 
 import com.example.moviereservation.entity.Movie;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,7 +18,7 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     List<Movie> findByCategory(String category);
 
     @Query("SELECT m from Movie m order By m.rating DESC")
-    List<Movie> findTopRated();
+    Page<Movie> findTopRated(Pageable pageable);
 
     boolean existsByTitle(String title);
 
