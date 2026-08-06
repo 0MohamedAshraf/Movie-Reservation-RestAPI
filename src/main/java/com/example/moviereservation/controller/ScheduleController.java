@@ -4,6 +4,7 @@ import com.example.moviereservation.dto.request.ScheduleRequestDto;
 import com.example.moviereservation.dto.response.MovieResponseDto;
 import com.example.moviereservation.dto.response.ScheduleResponseDto;
 import com.example.moviereservation.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,12 +55,12 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ScheduleResponseDto addSchedule(@RequestBody ScheduleRequestDto schedule){
+    public ScheduleResponseDto addSchedule(@Valid @RequestBody ScheduleRequestDto schedule){
         return scheduleService.addSchedule(schedule);
     }
 
     @PutMapping("/{id}")
-    public ScheduleResponseDto updateMovie(@RequestBody ScheduleRequestDto newSchedule,
+    public ScheduleResponseDto updateMovie(@Valid @RequestBody ScheduleRequestDto newSchedule,
                                            @PathVariable Integer id){
         return scheduleService.updateSchedule(newSchedule,id);
     }

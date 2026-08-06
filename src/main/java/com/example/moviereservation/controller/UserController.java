@@ -4,6 +4,7 @@ import com.example.moviereservation.dto.request.UserRequestDto;
 import com.example.moviereservation.dto.response.ReservationResponseDto;
 import com.example.moviereservation.dto.response.UserResponseDto;
 import com.example.moviereservation.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class UserController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable
-                                                      Integer id, @RequestBody UserRequestDto newUser){
+                                                      Integer id,@Valid @RequestBody UserRequestDto newUser){
         return ResponseEntity
                 .ok(service.update(id,newUser));
     }

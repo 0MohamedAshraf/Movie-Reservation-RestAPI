@@ -4,6 +4,7 @@ package com.example.moviereservation.controller;
 import com.example.moviereservation.dto.request.MovieRequestDto;
 import com.example.moviereservation.dto.response.MovieResponseDto;
 import com.example.moviereservation.service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -27,7 +28,8 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<Page<MovieResponseDto>> getAllMovies(@RequestParam int page, @RequestParam int size,
-                                                               @RequestParam Sort.Direction order,@RequestParam String sort){
+                                                               @RequestParam(required = false,defaultValue = "ASC") Sort.Direction order,
+                                                               @RequestParam(required = false) String sort){
 
         return ResponseEntity.ok(movieService.getAll(page, size,order,sort));
     }
@@ -64,7 +66,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieResponseDto> addMovie(@RequestBody MovieRequestDto movie){
+    public ResponseEntity<MovieResponseDto> addMovie(@Valid @RequestBody MovieRequestDto movie){
         MovieResponseDto theMovie = movieService.addMovie(movie);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -72,7 +74,8 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieResponseDto> updateMovie(@PathVariable Integer id, @RequestBody MovieRequestDto newMovie){
+    public ResponseEntity<MovieResponseDto> updateMovie(@PathVariable Integer id,
+                                                        @Valid @RequestBody MovieRequestDto newMovie){
 
         MovieResponseDto movie = movieService.updateMovie(newMovie, id);
         return ResponseEntity

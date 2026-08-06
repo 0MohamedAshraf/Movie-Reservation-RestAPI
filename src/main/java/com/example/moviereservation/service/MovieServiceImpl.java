@@ -9,10 +9,7 @@ import com.example.moviereservation.exceptions.ResourceNotFoundException;
 import com.example.moviereservation.mapper.MovieMapper;
 import com.example.moviereservation.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,7 +37,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Page<MovieResponseDto> getAll(int pageNum, int size, Sort.Direction direction, String sortCol){
+    public Page<MovieResponseDto> getAll(int pageNum, int size,
+                                         Sort.Direction direction,
+                                         String sortCol){
+
         Pageable page = PageRequest.of(pageNum, size,direction,sortCol);
 
         return movieRepository.findAll(page)

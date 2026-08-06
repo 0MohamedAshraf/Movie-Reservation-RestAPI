@@ -5,6 +5,7 @@ import com.example.moviereservation.dto.response.TheaterResponseDto;
 import com.example.moviereservation.dto.response.TheaterScheduleDto;
 import com.example.moviereservation.service.TheaterServiceImpl;
 import jakarta.persistence.EntityExistsException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,14 +53,14 @@ public class TheaterController {
 
 
     @PostMapping
-    public ResponseEntity<TheaterResponseDto> addTheater(@RequestBody TheaterRequestDto theater){
+    public ResponseEntity<TheaterResponseDto> addTheater(@Valid @RequestBody TheaterRequestDto theater){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(theaterService.addTheater(theater));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TheaterResponseDto> updateTheater(@RequestBody TheaterRequestDto newTheater,@PathVariable Integer id){
+    public ResponseEntity<TheaterResponseDto> updateTheater(@Valid @RequestBody TheaterRequestDto newTheater,@PathVariable Integer id){
         return ResponseEntity
                 .ok(theaterService.updateTheater(newTheater,id));
     }
