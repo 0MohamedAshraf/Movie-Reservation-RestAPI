@@ -31,10 +31,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/v1/movie/**","/api/v1/schedule/**","/api/v1/theater/**")
                         .hasRole(UserRole.ADMIN.name())
 
-                        .requestMatchers(HttpMethod.PUT,"/api/v1/movie/**")
+                        .requestMatchers(HttpMethod.PUT,"/api/v1/movie/**","/api/v1/schedule/**","/api/v1/theater/**")
                         .hasRole(UserRole.ADMIN.name())
 
-                        .requestMatchers(HttpMethod.DELETE,"/api/v1/movie/**")
+                        .requestMatchers(HttpMethod.DELETE,"/api/v1/movie/**","/api/v1/schedule/**","/api/v1/theater/**")
                         .hasRole(UserRole.ADMIN.name())
 
 
