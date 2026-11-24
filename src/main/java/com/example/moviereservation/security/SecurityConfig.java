@@ -28,6 +28,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
+                        // Swagger UI / OpenAPI documentation
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+                                "/v3/api-docs.yaml", "/webjars/**").permitAll()
+
                         .requestMatchers(HttpMethod.POST,"/api/v1/movie/**","/api/v1/schedule/**","/api/v1/theater/**")
                         .hasRole(UserRole.ADMIN.name())
 

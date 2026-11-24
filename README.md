@@ -56,6 +56,16 @@ spring.datasource.password=your-password
 
 The API will start on `http://localhost:8080` by default. All endpoints are prefixed with `/api/v1`.
 
+## API Documentation
+
+Interactive Swagger UI and the generated OpenAPI specification are available once the app is running:
+
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+- OpenAPI YAML: `http://localhost:8080/v3/api-docs.yaml`
+
+Click **Authorize** in Swagger UI and paste the JWT returned by `/api/v1/auth/register` or `/api/v1/auth/login` (just the token, without the `Bearer ` prefix) to try secured endpoints.
+
 ## API Reference
 
 ### Auth — `/api/v1/auth`
