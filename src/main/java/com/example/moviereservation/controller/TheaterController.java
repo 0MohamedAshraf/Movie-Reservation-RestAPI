@@ -67,6 +67,7 @@ public class TheaterController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTheater(@PathVariable Integer id){
+        theaterService.deleteTheater(id);
         return ResponseEntity
                 .ok("Deleted Successfully");
     }

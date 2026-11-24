@@ -15,6 +15,7 @@ public interface ScheduleSeatRepository extends JpaRepository<ScheduleSeat,Integ
 
     List<ScheduleSeat> getByScheduleId(Integer scheduleId);
 
+    List<ScheduleSeat> getByScheduleIdAndAvailable(Integer scheduleId, Boolean available);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
         SELECT s

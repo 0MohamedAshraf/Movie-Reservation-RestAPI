@@ -81,7 +81,7 @@ public class ScheduleSeatServiceImpl implements ScheduleSeatService {
 
     @Override
     public List<ScheduleSeat> getAvailableSeats(Integer scheduleId) {
-        return repository.getByScheduleId(scheduleId);
+        return repository.getByScheduleIdAndAvailable(scheduleId,true);
     }
 
     @Override
