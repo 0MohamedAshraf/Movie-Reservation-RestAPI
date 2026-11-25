@@ -12,6 +12,7 @@ A REST API for browsing movies and showtimes, and booking seats at a theater, bu
 
 - **Auth** — user registration and login with JWT-based authentication
 - **Access control** — role-based authorization (`ADMIN` / `CUSTOMER`) restricting movie, theater, and schedule management to admins
+- **Admin dashboard** — a browser UI at `/admin` for reviewing all users, theaters, movies, schedules, schedule seats, and reservations, plus approving or canceling bookings
 
 ## Tech Stack
 
@@ -65,6 +66,17 @@ Interactive Swagger UI and the generated OpenAPI specification are available onc
 - OpenAPI YAML: `http://localhost:8080/v3/api-docs.yaml`
 
 Click **Authorize** in Swagger UI and paste the JWT returned by `/api/v1/auth/register` or `/api/v1/auth/login` (just the token, without the `Bearer ` prefix) to try secured endpoints.
+
+## Admin Dashboard
+
+Open `http://localhost:8080/admin` in a browser and sign in with an account whose role is `ADMIN`. The dashboard shows overview counts and separate tables for users, theaters, movies, schedules, schedule seats, and reservations. In the Reservations tab you can:
+
+- **Approve** a `PENDING` reservation, which moves it to `CONFIRMED`.
+- **Cancel** a `PENDING` or `CONFIRMED` reservation, which releases its seats for booking again.
+
+The page is a static HTML/JS shell. It calls the protected `/api/v1/admin/**` endpoints with the JWT returned by `/api/v1/auth/login`; all authorization is enforced server-side.
+
+> Security note: registration and user update currently accept a client-supplied `role`, so a user can make themselves an `ADMIN`. Close that gap before exposing this dashboard outside a trusted environment.
 
 ## API Reference
 
@@ -197,6 +209,20 @@ Schedules are validated on create/update: `endTime` must be after `startTime`, `
 
 The total price is calculated automatically from the schedule's price and number of seats booked. Reserving seats that are already taken, don't belong to the given schedule, or don't exist returns an error and nothing is booked. Cancelling a reservation marks its seats available again and can't be done twice on the same reservation.
 
+### Admin — `/api/v1/admin` (ADMIN role required)
+
+| Method | Endpoint                              | Description                                                  |
+|--------|---------------------------------------|--------------------------------------------------------------|
+| GET    | `/admin/summary`                      | Counts for every dashboard section and pending reservations  |
+| GET    | `/admin/users`                        | All users (without passwords)                                |
+| GET    | `/admin/theaters`                     | All theaters                                                 |
+| GET    | `/admin/movies`                       | All movies                                                   |
+| GET    | `/admin/schedules`                    | All showtimes with movie/theater names                       |
+| GET    | `/admin/schedule-seats`               | All seats, availability and any active reservation           |
+| GET    | `/admin/reservations`                 | All reservations with customer, showtime and seat details    |
+| POST   | `/admin/reservations/{id}/approve`    | Approve a `PENDING` reservation                              |
+| POST   | `/admin/reservations/{id}/cancel`     | Cancel a reservation and release its seats                   |
+
 ## Data Model
 
 - **Movie** — title, description, rating, release date, category, duration; has many `Schedule`s and many `Actor`s
@@ -226,10 +252,10 @@ Errors are returned as plain-text messages with the following status codes:
 ```
 src/main/java/com/example/moviereservation/
 ├── auth/               # Registration/login controller and service
-├── controller/         # REST controllers (Movie, Theater, Schedule, Reservation, User)
+├── controller/         # REST controllers (Movie, Theater, Schedule, Reservation, User, Admin)
 ├── dto/
 │   ├── request/         # Incoming request payloads
-│   └── response/        # Outgoing response payloads
+│   └── response/        # Outgoing response payloads (including admin dashboard DTOs)
 ├── entity/             # JPA entities (Movie, Theater, Schedule, Seat, ScheduleSeat, User, Reservation, ReservationSeat, Actor)
 ├── enums/               # PaymentMethod, ReservationStatus, SeatClass, UserRole
 ├── exceptions/          # Custom exceptions + global exception handler
@@ -238,6 +264,8 @@ src/main/java/com/example/moviereservation/
 ├── security/            # JWT filter/service and Spring Security configuration
 ├── service/             # Business logic interfaces + implementations
 └── MovieReservationApplication.java
+
+src/main/resources/static/admin/  # Static admin dashboard (index.html, styles.css, app.js)
 ```
 
 ## Running Tests

@@ -293,6 +293,42 @@ class ReservationServiceImplTest {
             assertThatCode(() -> service.cancelReservation(5)).doesNotThrowAnyException();
             assertThat(reservation.getStatus()).isEqualTo(ReservationStatus.CANCELLED);
         }
+
+        @Test
+        @DisplayName("approveReservation throws ResourceNotFoundException when the reservation is missing")
+        void approveMissing() {
+            when(repository.findById(99)).thenReturn(Optional.empty());
+
+            assertThatThrownBy(() -> service.approveReservation(99))
+                    .isInstanceOf(ResourceNotFoundException.class);
+        }
+
+        @Test
+        @DisplayName("approveReservation moves a PENDING reservation to CONFIRMED")
+        void approvePending() {
+            Reservation reservation = TestData.reservation(5, ReservationStatus.PENDING, user, schedule);
+            when(repository.findById(5)).thenReturn(Optional.of(reservation));
+
+            service.approveReservation(5);
+
+            assertThat(reservation.getStatus()).isEqualTo(ReservationStatus.CONFIRMED);
+        }
+
+        @Test
+        @DisplayName("approveReservation rejects every non-PENDING reservation")
+        void approveNonPending() {
+            for (ReservationStatus status : List.of(ReservationStatus.CONFIRMED,
+                    ReservationStatus.CANCELLED, ReservationStatus.EXPIRED)) {
+                int id = 10 + status.ordinal();
+                Reservation reservation = TestData.reservation(id, status, user, schedule);
+                when(repository.findById(id)).thenReturn(Optional.of(reservation));
+
+                assertThatThrownBy(() -> service.approveReservation(id))
+                        .isInstanceOf(InvalidEntityException.class)
+                        .hasMessageContaining("Only PENDING");
+                assertThat(reservation.getStatus()).isEqualTo(status);
+            }
+        }
     }
 
     @Nested

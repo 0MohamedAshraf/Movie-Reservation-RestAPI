@@ -27,4 +27,13 @@ public interface ScheduleSeatRepository extends JpaRepository<ScheduleSeat,Integ
 
     boolean existsByScheduleId(Integer scheduleId);
 
+    @Query("""
+            SELECT ss FROM ScheduleSeat ss
+            JOIN FETCH ss.seat
+            JOIN FETCH ss.schedule s
+            JOIN FETCH s.movie
+            JOIN FETCH s.theater
+            ORDER BY ss.id
+            """)
+    List<ScheduleSeat> findAllForAdmin();
 }

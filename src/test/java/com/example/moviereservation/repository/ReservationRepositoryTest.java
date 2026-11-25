@@ -65,7 +65,7 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("findByUserId only returns PENDING and CONFIRMED reservations of that user")
     void findByUserId() {
-        List<Reservation> reservations = reservationRepository.findByUserId(firstUser.getId());
+        List<Reservation> reservations = reservationRepository.findActiveByUserId(firstUser.getId());
 
         assertThat(reservations)
                 .extracting(Reservation::getStatus)
@@ -75,6 +75,6 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("findByUserId does not leak reservations from other users")
     void findByUserIdIsScopedToTheUser() {
-        assertThat(reservationRepository.findByUserId(secondUser.getId())).hasSize(1);
+        assertThat(reservationRepository.findActiveByUserId(secondUser.getId())).hasSize(1);
     }
 }

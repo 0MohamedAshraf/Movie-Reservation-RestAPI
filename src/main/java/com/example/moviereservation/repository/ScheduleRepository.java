@@ -2,6 +2,7 @@ package com.example.moviereservation.repository;
 
 import com.example.moviereservation.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -17,5 +18,13 @@ public interface ScheduleRepository extends JpaRepository<Schedule,Integer> {
 
     List<Schedule> getSchedulesByDateAfter(LocalDate dateAfter);
 
+    List<Schedule> getScheduleByDateAndTheaterId(LocalDate date, Integer theaterId);
 
+    @Query("""
+            SELECT s FROM Schedule s
+            JOIN FETCH s.movie
+            JOIN FETCH s.theater
+            ORDER BY s.date DESC, s.startTime DESC
+            """)
+    List<Schedule> findAllForAdmin();
 }

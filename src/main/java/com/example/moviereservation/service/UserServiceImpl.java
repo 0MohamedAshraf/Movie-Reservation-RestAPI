@@ -55,21 +55,4 @@ public class UserServiceImpl implements UserService{
         repository.deleteById(userId);
     }
 
-    @Override
-    public List<ReservationResponseDto> getReservations(Integer userId) {
-        User user = repository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException("User with Id: " + userId + " Not Found")
-        );
-
-        return reservationRepository.findByUserId(userId)
-                .stream()
-                .map(reservation -> {
-                    ReservationResponseDto dto = reservationMapper.toDto(reservation);
-                    dto.setReservedSeatsIds(
-                            reservationSeatRepository.getReservedSeatsIds(reservation.getId())
-                    );
-                    return dto;
-                })
-                .toList();
-    }
 }

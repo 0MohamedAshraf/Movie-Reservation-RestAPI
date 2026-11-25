@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Movie Reservation — Admin Dashboard</title>
+    <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+<div id="loginView" class="login-view">
+    <form id="loginForm" class="login-card" method="post">
+        <div class="login-mark">MR</div>
+        <h1>Admin dashboard</h1>
+        <p class="muted">Sign in with an account that has the ADMIN role.</p>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="username" placeholder="admin@example.com" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
+
+        <button type="submit" class="primary">Sign in</button>
+        <p id="loginMessage" class="message" role="alert" aria-live="polite"></p>
+    </form>
+</div>
+
+<div id="dashboardView" class="dashboard" hidden>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">MR</div>
+            <div>
+                <strong>Movie Reservation</strong>
+                <span>Administration</span>
+            </div>
+        </div>
+
+        <nav class="nav" aria-label="Dashboard sections">
+            <button type="button" class="nav-button active" data-section="overview">Overview</button>
+            <button type="button" class="nav-button" data-section="users">Users</button>
+            <button type="button" class="nav-button" data-section="theaters">Theaters</button>
+            <button type="button" class="nav-button" data-section="movies">Movies</button>
+            <button type="button" class="nav-button" data-section="schedules">Schedules</button>
+            <button type="button" class="nav-button" data-section="scheduleSeats">Schedule seats</button>
+            <button type="button" class="nav-button" data-section="reservations">Reservations</button>
+        </nav>
+
+        <button type="button" id="logoutButton" class="logout">Sign out</button>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h1>Admin dashboard</h1>
+                <p id="roleLabel" class="muted">Signed in as admin</p>
+            </div>
+            <div class="topbar-actions">
+                <span id="lastUpdated" class="muted"></span>
+                <button type="button" id="refreshButton" class="secondary">Refresh all</button>
+            </div>
+        </header>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+
+        <section id="section-overview" class="panel active">
+            <div class="panel-heading">
+                <div>
+                    <h2>Overview</h2>
+                    <p class="muted">Live counts from the reservation system.</p>
+                </div>
+            </div>
+            <div id="summaryCards" class="cards"></div>
+            <div class="hint">
+                <strong>Tip:</strong> open the Reservations tab to approve pending bookings or cancel an existing one.
+                Cancelling releases the seats so they can be booked again.
+            </div>
+        </section>
+
+        <section id="section-users" class="panel" hidden>
+            <div class="panel-heading">
+                <div>
+                    <h2>Users</h2>
+                    <p class="muted">All registered accounts and their roles.</p>
+                </div>
+                <button type="button" class="secondary" data-load="users">Refresh</button>
+            </div>
+            <div class="table-wrap"><table id="usersTable"></table></div>
+        </section>
+
+        <section id="section-theaters" class="panel" hidden>
+            <div class="panel-heading">
+                <div>
+                    <h2>Theaters</h2>
+                    <p class="muted">Every theater registered in the system.</p>
+                </div>
+                <button type="button" class="secondary" data-load="theaters">Refresh</button>
+            </div>
+            <div class="table-wrap"><table id="theatersTable"></table></div>
+        </section>
+
+        <section id="section-movies" class="panel" hidden>
+            <div class="panel-heading">
+                <div>
+                    <h2>Movies</h2>
+                    <p class="muted">Movie catalog with ratings and release information.</p>
+                </div>
+                <button type="button" class="secondary" data-load="movies">Refresh</button>
+            </div>
+            <div class="table-wrap"><table id="moviesTable"></table></div>
+        </section>
+
+        <section id="section-schedules" class="panel" hidden>
+            <div class="panel-heading">
+                <div>
+                    <h2>Schedules</h2>
+                    <p class="muted">All showtimes with their movie and theater.</p>
+                </div>
+                <button type="button" class="secondary" data-load="schedules">Refresh</button>
+            </div>
+            <div class="table-wrap"><table id="schedulesTable"></table></div>
+        </section>
+
+        <section id="section-scheduleSeats" class="panel" hidden>
+            <div class="panel-heading">
+                <div>
+                    <h2>Schedule seats</h2>
+                    <p class="muted">Seat availability per showtime and any active reservation holding a seat.</p>
+                </div>
+                <div class="heading-actions">
+                    <label class="filter-label" for="seatAvailabilityFilter">Availability</label>
+                    <select id="seatAvailabilityFilter">
+                        <option value="">All</option>
+                        <option value="available">Available</option>
+                        <option value="unavailable">Unavailable</option>
+                    </select>
+                    <button type="button" class="secondary" data-load="scheduleSeats">Refresh</button>
+                </div>
+            </div>
+            <div class="table-wrap"><table id="scheduleSeatsTable"></table></div>
+        </section>
+
+        <section id="section-reservations" class="panel" hidden>
+            <div class="panel-heading">
+                <div>
+                    <h2>Reservations</h2>
+                    <p class="muted">Approve pending bookings or cancel a booking and release its seats.</p>
+                </div>
+                <div class="heading-actions">
+                    <label class="filter-label" for="reservationStatusFilter">Status</label>
+                    <select id="reservationStatusFilter">
+                        <option value="">All</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                        <option value="EXPIRED">Expired</option>
+                    </select>
+                    <button type="button" class="secondary" data-load="reservations">Refresh</button>
+                </div>
+            </div>
+            <div class="table-wrap"><table id="reservationsTable"></table></div>
+        </section>
+    </main>
+</div>
+
+<script src="/admin/app.js"></script>
+</body>
+</html>

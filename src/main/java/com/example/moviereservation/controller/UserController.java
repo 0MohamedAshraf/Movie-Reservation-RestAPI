@@ -44,17 +44,6 @@ public class UserController {
                 .ok(service.getById(id));
     }
 
-    @GetMapping("/{userId}/reservations")
-    @Operation(summary = "Get a user's reservations", description = "Lists all reservations belonging to the given user.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Reservations returned"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    public ResponseEntity<List<ReservationResponseDto>> getReservations(@PathVariable
-                                                                         Integer userId){
-        return ResponseEntity
-                .ok(service.getReservations(userId));
-    }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a user", description = "Updates the user's profile, role included.")

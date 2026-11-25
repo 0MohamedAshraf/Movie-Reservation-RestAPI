@@ -140,7 +140,7 @@ class UserServiceImplTest {
         @DisplayName("getReservations returns an empty list when the user has none")
         void getReservationsEmpty() {
             when(repository.findById(1)).thenReturn(Optional.of(user));
-            when(reservationRepository.findByUserId(1)).thenReturn(List.of());
+            when(reservationRepository.findAllByUserId(1)).thenReturn(List.of());
 
             assertThat(service.getReservations(1)).isEmpty();
         }
@@ -154,7 +154,7 @@ class UserServiceImplTest {
             ReservationResponseDto firstDto = new ReservationResponseDto();
             ReservationResponseDto secondDto = new ReservationResponseDto();
             when(repository.findById(1)).thenReturn(Optional.of(user));
-            when(reservationRepository.findByUserId(1)).thenReturn(List.of(first, second));
+            when(reservationRepository.findAllByUserId(1)).thenReturn(List.of(first, second));
             when(reservationMapper.toDto(first)).thenReturn(firstDto);
             when(reservationMapper.toDto(second)).thenReturn(secondDto);
             when(reservationSeatRepository.getReservedSeatsIds(5)).thenReturn(List.of(10, 11));

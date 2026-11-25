@@ -31,6 +31,10 @@ class OpenApiSmokeTest {
                 .andExpect(jsonPath("$.paths['/api/v1/theater']").exists())
                 .andExpect(jsonPath("$.paths['/api/v1/reservation']").exists())
                 .andExpect(jsonPath("$.paths['/api/v1/user/{id}']").exists())
+                .andExpect(jsonPath("$.paths['/api/v1/admin/users']").exists())
+                .andExpect(jsonPath("$.paths['/api/v1/admin/summary'].get.tags[0]").value("Admin"))
+                .andExpect(jsonPath("$.paths['/api/v1/admin/reservations/{reservationId}/approve'].post.tags[0]")
+                        .value("Admin"))
                 .andExpect(jsonPath("$.paths['/api/v1/movie/id/{id}'].get.security[0].bearerAuth").exists());
 
         mockMvc.perform(get("/swagger-ui.html"))

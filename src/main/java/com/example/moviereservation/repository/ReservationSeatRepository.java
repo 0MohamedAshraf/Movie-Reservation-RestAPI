@@ -41,4 +41,13 @@ public interface ReservationSeatRepository extends JpaRepository<ReservationSeat
     boolean existsByReservation_Id(Integer reservationId);
     
     boolean existsByReservation_IdAndScheduleSeat_Id(Integer reservationId, Integer scheduleSeatId);
+
+    @Query("""
+            SELECT rs FROM ReservationSeat rs
+            JOIN FETCH rs.reservation
+            JOIN FETCH rs.scheduleSeat ss
+            JOIN FETCH ss.seat
+            ORDER BY rs.id
+            """)
+    List<ReservationSeat> findAllForAdmin();
 }

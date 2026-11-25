@@ -101,4 +101,27 @@ public class ReservationServiceImpl implements ReservationService {
         scheduleSeatService.saveAll(reservedSeats);
         reservationSeatRepository.deleteAllByReservationId(reservationId);
     }
+
+    @Transactional
+    @Override
+    public void approveReservation(Integer reservationId) {
+        Reservation reservation = repository.findById(reservationId).orElseThrow(
+                () -> new ResourceNotFoundException("Reservation with id: " + reservationId + " Not Found")
+        );
+        if (!ReservationStatus.PENDING.equals(reservation.getStatus()))
+            throw new InvalidEntityException("Only PENDING reservations can be approved");
+
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+    }
+
+    @Override
+    public List<ReservationResponseDto> getByUserId(Integer userId) {
+        userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User with id: "+ userId + " Not Found")
+        );
+        List<Reservation> reservations = repository.findAllByUserId(userId);
+        return reservations.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
 }

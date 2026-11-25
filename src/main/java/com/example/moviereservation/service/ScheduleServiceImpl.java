@@ -41,13 +41,12 @@ public class ScheduleServiceImpl implements ScheduleService{
         if(schedule.getPrice() <= 0)
             throw new InvalidEntityException("Scheudle Price can't be less than or equal 0");
 
-        List<Schedule> schedules = scheduleRepository.getSchedulesByDate(schedule.getDate());
+        List<Schedule> schedules = scheduleRepository.getScheduleByDateAndTheaterId(schedule.getDate(),schedule.getTheaterId());
         for(Schedule theSchedule : schedules){
 
             // guarantee that there is no schedule overlap
-            if(     schedule.getStartTime().isBefore(theSchedule.getEndTime())
-                    && schedule.getEndTime().isAfter(theSchedule.getStartTime())
-                    && schedule.getTheaterId().equals(theSchedule.getTheater().getId())   ){
+            if(schedule.getStartTime().isBefore(theSchedule.getEndTime()) &&
+                    schedule.getEndTime().isAfter(theSchedule.getStartTime())){
                 throw new ScheduleOverlapException("Schedule Overlapping");
             }
         }
