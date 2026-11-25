@@ -76,7 +76,6 @@ Open `http://localhost:8080/admin` in a browser and sign in with an account whos
 
 The page is a static HTML/JS shell. It calls the protected `/api/v1/admin/**` endpoints with the JWT returned by `/api/v1/auth/login`; all authorization is enforced server-side.
 
-> Security note: registration and user update currently accept a client-supplied `role`, so a user can make themselves an `ADMIN`. Close that gap before exposing this dashboard outside a trusted environment.
 
 ## API Reference
 
